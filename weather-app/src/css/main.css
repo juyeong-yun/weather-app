@@ -1,0 +1,7 @@
+/* 구글 폰트 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+
+.container {padding: 0 10%;}
+.searchRegion {display: flex; align-items: center;}
+.searchRegion input {margin-left: 10px; padding: 3px;}
