@@ -53,6 +53,7 @@ const WeatherTest = () => {
         e.preventDefault();
         
         setRegion(inputValue); // 입력된 값으로 지역 업데이트
+        setInputValue('');
         fetchWeatherData(); // 날씨 데이터 요청
     };
 
