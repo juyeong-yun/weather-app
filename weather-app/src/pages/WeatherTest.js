@@ -49,7 +49,10 @@ const WeatherTest = () => {
 
     return(
         <div className="container">
-            <h3> weather test page </h3>
+            <div className='title'>
+                <h3>forecast test page </h3>
+            </div>
+            
             <form onSubmit={handleSubmit}>
                 <div className="searchRegion">
                     <h3>원하는 지역을 검색해 주세요 : </h3>

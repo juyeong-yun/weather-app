@@ -31,9 +31,10 @@
   }
 }
 
-.container { margin: 20px 0 0 20px; padding: 10px;}
+/* 전체적인 페이지 너비 */
+.container { margin: 20px 10px 0 20px; padding: 10px;}
 
-.menuBar { padding: 10px;}
+/* 메뉴바 */
 .menuBar nav { display: block; margin-bottom: 20px;}
 .menuBar nav a { margin-right: 15px; color: #282c34; 
   text-decoration: none; font-size: 18px;}

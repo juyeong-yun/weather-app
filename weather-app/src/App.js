@@ -17,13 +17,14 @@ function App() {
               <Link to="/weather-test">Weather Example</Link>
               <Link to="/forecast-test">Forecast Example</Link>
             </nav>
-            <Routes>
-              <Route path='/' element={<Main />}/>
-              <Route path='/weather-test' element={<WeatherTest />}/>
-              <Route path='/forecast-test' element={<ForecastTest />}/>
-            </Routes>
         </div>
       </div>
+        <Routes>
+          <Route path='/' element={<Main />}/>
+          <Route path='/weather-test' element={<WeatherTest />}/>
+          <Route path='/forecast-test' element={<ForecastTest />}/>
+        </Routes>
+
     </div>
   );
 }
