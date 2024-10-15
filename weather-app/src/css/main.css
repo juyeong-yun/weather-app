@@ -4,11 +4,17 @@
 .searchRegion .search {display: flex; align-items: center; margin: 5% 0;}
 .searchRegion .search input {margin-left: 10px; padding: 4px; border:none; border-bottom: 1px solid;}
 
+.searchResult {display: flex;}
+.resultBox {float: left; width: 48%;background-color: gray; margin: 5px; }
+.tempByClothes {float: right; width: 48%; background-color:bisque; margin: 5px;}
+
+
+/*+++++++++++++++++++ 
+Test Page 
+*+++++++++++++++++++*/
 .result { margin-top: 10px;}
 .result h4, .result p {padding: 10px 0;}
 
-
 .note { margin-top: 10%;}
-.note h3 {margin-bottom: 30px;}
 .note li {display: block; padding: 10px 0; line-height: initial;}
 

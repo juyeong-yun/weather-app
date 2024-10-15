@@ -18,7 +18,7 @@ const ForecastTest = () => {
         if (!region) return;
         
         setLoading(true);
-        setError(true);
+        setError(null);
 
         // 위도, 경도 가져오는 Geoapi
         const geo = `http://api.openweathermap.org/geo/1.0/direct?q=${region}&limit=1&appid=${apiKey}`;
@@ -31,7 +31,6 @@ const ForecastTest = () => {
                 
                 // 첫 번째 결과에서 위도와 경도 추출
                 const {lat, lon} = geoData[0];
-                // console.log(`lat: ${lat}, lon : ${lon}`);
                 
                 const url =`http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=kr&cnt=5`;
                 const resp = await fetch(url);
@@ -39,7 +38,6 @@ const ForecastTest = () => {
 
                 if(data.cod === '200') {
                     setForecastData(data);
-                    console.log("forecastData: ", data);
                 } else{
                     throw new Error(data.message);
                 }
@@ -83,9 +81,10 @@ const ForecastTest = () => {
                     </div>
                 </div>
             </form>
-
             {loading ? (
                 <p>로딩 중...</p>
+            ) : error ? (
+                <p>{error}</p>
             ) : (
                 forecastData && (
                     <div className='result'>
@@ -113,12 +112,8 @@ const ForecastTest = () => {
                             </ul>
                         </div>
                     </div>
-                )
-            )}
-
-            
+                ))}
         </div>
-
     )
 
 }

@@ -21,8 +21,8 @@ const WeatherTest = () => {
         setLoading(true);
         setError(null);
 
-        // URL 설정, &units=metric - 섭씨 변환
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${region}&appid=${apiKey}&units=metric`;
+        // URL 설정
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${region}&appid=${apiKey}&units=metric&lang=kr`;
 
         try {
             const resp = await fetch(url);
@@ -65,7 +65,6 @@ const WeatherTest = () => {
 
             <form onSubmit={handleSubmit}>
                 <div className="searchRegion">
-                    <span>영어 작성 필수</span>
                     <div className='search'>
                         <h3>원하는 지역을 검색해 주세요 : </h3>
                         <input type="text" value={inputValue} 
