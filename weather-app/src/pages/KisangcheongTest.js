@@ -5,6 +5,10 @@ const KisangcheongTest = () => {
     const [inputValue, setInputValue] = useState('');
     const [Error, setError] = useState(null);
 
+    const apiKey = process.env.REACT_APP_API_Kisangcheong;
+
+    const url = `https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2?&authKey={}`;
+
     const handleSubmit = (value) => {
         
     };

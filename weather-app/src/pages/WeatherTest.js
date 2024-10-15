@@ -11,7 +11,7 @@ const WeatherTest = () => {
     const [error, setError] = useState(null); // 오류 상태
 
     // 환경 변수로 저장한 API 키 호출
-    const apiKey = process.env.REACT_APP_API_KEY;
+    const apiKey = process.env.REACT_APP_API_OpenWeather;
     // console.log("apiKey: ", apiKey);
 
     // fetchWeatherData 함수를 useCallback으로 래핑

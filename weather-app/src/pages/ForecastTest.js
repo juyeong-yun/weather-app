@@ -11,7 +11,7 @@ const ForecastTest = () => {
     const [error, setError] = useState(null);
 
     // 환경 변수로 저장한 API 키 호출
-    const apiKey = process.env.REACT_APP_API_KEY;
+    const apiKey = process.env.REACT_APP_API_OpenWeather;
 
     const fetchForecastData = useCallback(async () => {
         // 입력된 지역이 없으면 호출하지 않음
