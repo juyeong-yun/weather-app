@@ -102,6 +102,12 @@ const WeatherTest = () => {
                     </li>
                     <li>useEffect : React의 Hook 중 하나<br /><br />
                     컴포너트의 생명주기 동안 특정 작업을 수행할 수 있게 해준다. 컴포넌트가 랜더링 될 때마다 실행된다.
+                        <ol>
+                            <li> 함수 function : 실행 함수. 컴포넌트가 렌더링될 때 실행된다.
+                            </li>
+                            <li> 의존성 dependency : 선택 사항 <br /><br />
+                                이 인자가 있으면, 그 값이 변경될 때마다 useEffect의 함수가 다시 실행되며, 비어 있으면 컴포넌트가 처음 렌더링될 때 한 번만 실행된다.</li>
+                        </ol>
                     </li>
                     <li>useState : React의 Hook 중 하나<br /><br />
                     컴포넌트 내에서 상태를 관리하는데 사용. UI를 동적으로 업데이트 하는데 사용된다.

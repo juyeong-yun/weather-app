@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import '../css/main.css';
 import '../reset.css';
 
 const KisangcheongTest = () => {
-    const [region, setRegion] = useState('');
+    const [address, setAdress] = useState('');
     const [inputValue, setInputValue] = useState('');
     const [weatherData, setWeatherData] = useState('');
     const [date, setDate] = useState("");
@@ -13,35 +12,55 @@ const KisangcheongTest = () => {
     const [loading, setLoading] = useState(false);
     const [Error, setError] = useState(null);
 
+    // 날씨
     const apiKey = process.env.REACT_APP_API_Kisangcheong;
-    // console.log(apiKey);
+    // 좌표
+    const geoID = process.env.REACT_APP_API_Naver_ID;
+    const geoKey = process.env.REACT_APP_API_Naver_Key;
 
-    const fetchKisangcheongData = async() => {
-        if (!region) return;
+    const fetchKisangcheongData = useCallback(async() => {
+        if (!address) return;
 
         setLoading(true);
         setError(null);
-
-        const url = `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=${apiKey}&numOfRows=10&pageNo=1&base_date=${date}&base_time=${time}&nx=${lat}&ny=${lon}`;
         
+        // 네이버맵 geocoding 
+        const geo = `/map-geocode/v2/geocode?query=${address}`;
+
         try{
-            const resp = await fetch(url);
-            const data = await resp.json();
+            const geoResp = await fetch(geo, {
+                method: 'GET',
+                headers : {
+                    'X-NCP-APIGW-API-KEY-ID': geoID,
+                    'X-NCP-APIGW-API-KEY': geoKey,
+                    'Accept': 'application/json',
+                },
+            });
+            const geoData = await geoResp.json();
+            console.log(geoData.origin);
             
-            console.log(data);
+            if(geoData.adress.length > 0){
+
+                const weatherUrl = `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=${apiKey}&numOfRows=10&pageNo=1&base_date=${date}&base_time=${time}&nx={lat}&ny={lon}`;
+            const weatherResp = await fetch(weatherUrl);
+            const weatherData = await weatherResp.json();
             
-            if(data.cod === '200') {
-                setWeatherData(data);
-            } else{
-                throw new Error(data.message);
+            if (weatherResp.ok) {
+                setWeatherData(weatherData);
+            } else {
+                throw new Error('날씨 데이터를 불러오는 중 오류가 발생했습니다.');
             }
-        }catch {
-
-        }finally{
-
+        } else {
+            throw new Error('좌표 데이터를 불러오는 중 오류가 발생했습니다.');
         }
+    }catch(error) {
+        console.error("API 호출 실패", error);
+        setError(error.message);
+    }finally{
+        setLoading(false);
+    }
 
-    };
+    }, [address, date, time, apiKey, geoID, geoKey]);
 
     // 오늘 날짜, 다음날 날짜
     useEffect(() => {
@@ -55,8 +74,7 @@ const KisangcheongTest = () => {
         const hours = String(currentDate.getHours()).padStart(2, "0");
         const minutes = String(currentDate.getMinutes()).padStart(2, "0");
 
-        setTm1(`${year}${month}${date}${hours}${minutes}`);
-
+        
         // 내일 날짜와 시간 계산 (currentDate에 1일을 더함)
         const nextDate = new Date(currentDate);
         nextDate.setDate(currentDate.getDate() + 1);
@@ -72,16 +90,21 @@ const KisangcheongTest = () => {
         const nextHours = String(nextDate.getHours()).padStart(2, "0");
         const nextMinutes = String(nextDate.getMinutes()).padStart(2, "0");
 
-        setTm2(`${nextYear}${nextMonth}${nextDay}${nextHours}${nextMinutes}`);
-
+        
     },[]);
     
     const handleSubmit = (value) => {
         value.preventDefault();
         
-        setRegion(inputValue);
+        setAdress(inputValue);
         setInputValue('');
     };
+
+    useEffect(() => {
+        if(address) {
+            fetchKisangcheongData();
+        }
+    },[address, fetchKisangcheongData]);
 
     return (
         <div className="container">
