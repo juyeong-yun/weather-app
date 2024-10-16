@@ -34,19 +34,34 @@ const KisangcheongTest = () => {
                     'X-NCP-APIGW-API-KEY-ID': geoID,
                     'X-NCP-APIGW-API-KEY': geoKey,
                     'Accept': 'application/json',
+                    'Accept-Language' : 'ko',
                 },
             });
             const geoData = await geoResp.json();
-            console.log(geoData.origin);
+            console.log(geoData);
             
-            if(geoData.adress.length > 0){
+            if (geoData.addresses && geoData.addresses.length > 0) {
+                const addressData = geoData.addresses[0]; 
+                // 첫 번째 주소 데이터 선택 (검색한 위치와 가장 가까운 곳을 반환)
+                
+                const { x, y, jibunAddress } = addressData;
+                // console.log(`지번 주소: ${jibunAddress}`); 
+                // console.log(`y: ${x} y : ${y}`);
 
-                const weatherUrl = `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=${apiKey}&numOfRows=10&pageNo=1&base_date=${date}&base_time=${time}&nx={lat}&ny={lon}`;
-            const weatherResp = await fetch(weatherUrl);
-            const weatherData = await weatherResp.json();
-            
+                const weatherUrl = `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst
+                ?serviceKey=${apiKey}&numOfRows=10&pageNo=1&base_date=${date}&base_time=${time}&nx=${x}&ny=${y}`;
+                
+                const weatherResp = await fetch(weatherUrl,{
+                    method : 'GET',
+                    headers : {
+                        'Accept' : 'application/json',
+                    },
+                });
+                const weatherData = await weatherResp.json();
+                
             if (weatherResp.ok) {
                 setWeatherData(weatherData);
+                console.log(weatherData);
             } else {
                 throw new Error('날씨 데이터를 불러오는 중 오류가 발생했습니다.');
             }
@@ -73,7 +88,8 @@ const KisangcheongTest = () => {
         const date = String(currentDate.getDate()).padStart(2, "0");
         const hours = String(currentDate.getHours()).padStart(2, "0");
         const minutes = String(currentDate.getMinutes()).padStart(2, "0");
-
+        setDate(`${year}${month}${date}`);
+        setTime(`${hours}$${minutes}`);
         
         // 내일 날짜와 시간 계산 (currentDate에 1일을 더함)
         const nextDate = new Date(currentDate);
@@ -115,13 +131,14 @@ const KisangcheongTest = () => {
             <form onSubmit={handleSubmit}>
                 <div className="searchRegion">
                     <div className='search'>
-                        <h3>원하는 지역을 검색해 주세요 : </h3>
+                        <h3>어느 지역의 날씨를 알고 싶나요? </h3>
                         <input type="text" value={inputValue}
                         onChange={(value) => setInputValue(value.target.value)}  />
                         <button type="submit">검색</button>
                     </div>
                 </div>
             </form>
+
         </div>
     )
 };
