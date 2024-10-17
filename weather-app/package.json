@@ -1,7 +1,6 @@
 {
   "name": "weather-app",
   "version": "0.1.0",
-  "proxy": "https://naveropenapi.apigw.ntruss.com",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
@@ -36,5 +35,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:3000"
 }

@@ -1,6 +1,14 @@
-const express = require('express');
-const fetch = require('node-fetch');
-const cors = require('cors');
+// CommonJS >> ES 모듈 변경
+// const express = require('express');
+// const fetch = require('node-fetch');
+// const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+
+// .env 파일에서 환경 변수를 불러오기
+dotenv.config();
 
 const app = express();
 const PORT = 3000;
@@ -29,7 +37,8 @@ app.get('/api/weather', async (req, res) => {
     const { base_date, base_time, nx, ny } = req.query;
     const apiKey = process.env.WEATHER_API_KEY;
 
-    const response = await fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=${apiKey}&numOfRows=10&pageNo=1&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}`);
+    const response = await fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/
+        getVilageFcst?serviceKey=${apiKey}&numOfRows=10&pageNo=1&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}`);
     
     const data = await response.json();
     res.json(data);
