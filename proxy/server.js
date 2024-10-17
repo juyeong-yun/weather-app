@@ -11,9 +11,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = 5000;
 
 app.use(cors());
+
+// app.get('/kisangcheong-test',(rep, res) => {
+//     res.send('Kisangcheong Test 페이지 접속');
+// });
 
 // 네이버 API 프록시
 app.get('/api/naver', async (req, res) => {
