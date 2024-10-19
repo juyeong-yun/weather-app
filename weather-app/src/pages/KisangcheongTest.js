@@ -24,13 +24,13 @@ const KisangcheongTest = () => {
          * 공백 %20
          */
         // 네이버맵 geocoding 
-        const geo = `/api/naver?query=${address}`;
+        const geo = `/kisangcheong-test/api/naver?query=${address}`;
 
         try{
             const geoResp = await fetch(geo,{
                 method: 'GET',
                 headers: {
-
+                    'Accept' : 'application/json',
                     'Accept-Language' : 'ko',
                 },
             });
@@ -45,7 +45,7 @@ const KisangcheongTest = () => {
                 const { x, y } = addressData;
                 console.log(`x: ${x} y : ${y}`);
 
-                const weatherUrl = `/api/weather/?base_date=${date}&base_time=${time}&nx=${x}&ny=${y}`;
+                const weatherUrl = `/kisangcheong-test/api/weather/?base_date=${date}&base_time=${time}&nx=${x}&ny=${y}`;
                 
                 const weatherResp = await fetch(weatherUrl,{
                     method : 'GET',
