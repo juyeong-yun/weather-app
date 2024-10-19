@@ -4,19 +4,13 @@ import '../css/main.css';
 import '../reset.css';
 
 const KisangcheongTest = () => {
-    const [address, setAdress] = useState('');
+    const [address, setAddress] = useState('');
     const [inputValue, setInputValue] = useState('');
-    const [weatherData, setWeatherData] = useState('');
+    const [weatherData, setWeatherData] = useState(null);
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
     const [loading, setLoading] = useState(false);
-    const [Error, setError] = useState(null);
-
-    // 날씨
-    const apiKey = process.env.REACT_APP_API_Kisangcheong;
-    // 좌표
-    const geoID = process.env.REACT_APP_API_Naver_ID;
-    const geoKey = process.env.REACT_APP_API_Naver_Key;
+    const [error, setError] = useState(null);
 
     const fetchKisangcheongData = useCallback(async() => {
         if (!address) return;
@@ -24,39 +18,42 @@ const KisangcheongTest = () => {
         setLoading(true);
         setError(null);
         
+        /**
+         * encodeURIComponent()
+         * URL 에서 안전하게 사용할 수 있도록 문자열을 인코딩 해준다.
+         * 공백 %20
+         */
         // 네이버맵 geocoding 
-        const geo = `/map-geocode/v2/geocode?query=${address}`;
+        const geo = `/api/naver?query=${address}`;
 
         try{
-            const geoResp = await fetch(geo, {
+            const geoResp = await fetch(geo,{
                 method: 'GET',
-                headers : {
-                    'X-NCP-APIGW-API-KEY-ID': geoID,
-                    'X-NCP-APIGW-API-KEY': geoKey,
-                    'Accept': 'application/json',
+                headers: {
+
                     'Accept-Language' : 'ko',
                 },
             });
+            
             const geoData = await geoResp.json();
-            console.log(geoData);
             
             if (geoData.addresses && geoData.addresses.length > 0) {
-                const addressData = geoData.addresses[0]; 
                 // 첫 번째 주소 데이터 선택 (검색한 위치와 가장 가까운 곳을 반환)
-                
-                const { x, y, jibunAddress } = addressData;
-                // console.log(`지번 주소: ${jibunAddress}`); 
-                // console.log(`y: ${x} y : ${y}`);
+                const addressData = geoData.addresses[0]; 
+                console.log(addressData);
 
-                const weatherUrl = `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst
-                ?serviceKey=${apiKey}&numOfRows=10&pageNo=1&base_date=${date}&base_time=${time}&nx=${x}&ny=${y}`;
+                const { x, y } = addressData;
+                console.log(`x: ${x} y : ${y}`);
+
+                const weatherUrl = `/api/weather/?base_date=${date}&base_time=${time}&nx=${x}&ny=${y}`;
                 
                 const weatherResp = await fetch(weatherUrl,{
                     method : 'GET',
-                    headers : {
+                    headers: {
                         'Accept' : 'application/json',
                     },
                 });
+
                 const weatherData = await weatherResp.json();
                 
             if (weatherResp.ok) {
@@ -65,8 +62,9 @@ const KisangcheongTest = () => {
             } else {
                 throw new Error('날씨 데이터를 불러오는 중 오류가 발생했습니다.');
             }
+
         } else {
-            throw new Error('좌표 데이터를 불러오는 중 오류가 발생했습니다.');
+            throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
         }
     }catch(error) {
         console.error("API 호출 실패", error);
@@ -75,12 +73,13 @@ const KisangcheongTest = () => {
         setLoading(false);
     }
 
-    }, [address, date, time, apiKey, geoID, geoKey]);
+    }, [address, date, time]);
 
     // 오늘 날짜, 다음날 날짜
     useEffect(() => {
         const currentDate = new Date();
-        // console.log(currentDate); Tue Oct 15 2024 16:09:44 GMT+0900 (Korean Standard Time)
+        // console.log(currentDate); 
+        // Tue Oct 15 2024 16:09:44 GMT+0900 (Korean Standard Time)
 
         // 오늘 날짜와 시간 계산
         const year = currentDate.getFullYear();
@@ -89,7 +88,7 @@ const KisangcheongTest = () => {
         const hours = String(currentDate.getHours()).padStart(2, "0");
         const minutes = String(currentDate.getMinutes()).padStart(2, "0");
         setDate(`${year}${month}${date}`);
-        setTime(`${hours}$${minutes}`);
+        setTime(`${hours}${minutes}`);
         
         // 내일 날짜와 시간 계산 (currentDate에 1일을 더함)
         const nextDate = new Date(currentDate);
@@ -106,13 +105,12 @@ const KisangcheongTest = () => {
         const nextHours = String(nextDate.getHours()).padStart(2, "0");
         const nextMinutes = String(nextDate.getMinutes()).padStart(2, "0");
 
-        
     },[]);
     
-    const handleSubmit = (value) => {
-        value.preventDefault();
+    const handleSubmit = (e) => {
+        e.preventDefault();
         
-        setAdress(inputValue);
+        setAddress(inputValue);
         setInputValue('');
     };
 
@@ -133,12 +131,30 @@ const KisangcheongTest = () => {
                     <div className='search'>
                         <h3>어느 지역의 날씨를 알고 싶나요? </h3>
                         <input type="text" value={inputValue}
-                        onChange={(value) => setInputValue(value.target.value)}  />
+                        onChange={(e) => setInputValue(e.target.value)}  />
                         <button type="submit">검색</button>
                     </div>
                 </div>
             </form>
+            {loading && <p>로딩 중...</p>}
+            {error && <p>오류발생 : {error}</p>}
+            {weatherData && 
 
+            /**
+             * JSON.stringify()
+             * weatherData가 존재할 경우(즉, null이 아니고 데이터가 있는 경우) 
+             * 해당 데이터를 JSON 문자열로 변환하여 <div> 안에 표시합니다.
+             */
+                <div className='result'> {JSON.stringify(weatherData, null, 2)}
+                </div>
+                }
+                <div className='note'>
+                    <h3>노트</h3>
+                    <ul>
+                        <li>서버 중지 : ctrl + c</li>
+                        <li>서버 다시 시작 : node server.js</li>
+                    </ul>
+                </div>
         </div>
     )
 };
