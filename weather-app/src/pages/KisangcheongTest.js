@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { convertToGrid } from '../utils/gridConverter';
+import { getCurrentDateTime } from '../utils/dateUtil';
 
 import '../css/main.css';
 import '../reset.css';
@@ -80,29 +81,12 @@ const KisangcheongTest = () => {
 
     }, [address, baseDate, baseTime]);
 
-    // 오늘 날짜와 시간 계산 (초단기 실황에 맞춤)
+    // 구하는 날짜와 시간 계산 (초단기 실황에 맞춤)
     useEffect(() => {
-        const currentDate = new Date();
-        // console.log(currentDate); 
-
-        const year = currentDate.getFullYear();
-        const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1 필요
-        const date = String(currentDate.getDate()).padStart(2, "0");
+        const {baseDate: date, baseTime : time} = getCurrentDateTime();
         
-        let hours = String(currentDate.getHours()).padStart(2, "0");
-        
-        // 자정에는 전 날짜로, 아니라면 한 시간씩 뒤로
-        if (hours === 0) {
-            hours = 23;
-            currentDate.setDate(currentDate.getDate()-1);
-        } else {
-            hours -= 1;
-        }
-        const baseTime = String(hours).padStart(2,"0") + "00";
-        
-        setBaseDate(`${year}${month}${date}`);
-        setBaseTime(baseTime);
-
+        setBaseDate(date);
+        setBaseTime(time);
     },[]);
     
     const handleSubmit = (e) => {
@@ -153,7 +137,7 @@ const KisangcheongTest = () => {
                             <p>온도: {item.obsrValue}°C</p>
                         )}
                         {item.category === "PTY" && (
-                            <p>강수 형태: {item.obsrValue === "0" ? "없음" : "비 또는 눈"}</p>
+                            <p>강수 형태: {item.obsrValue}</p>
                         )}
                         {item.category === "REH" && (
                             <p>습도: {item.obsrValue}%</p>
