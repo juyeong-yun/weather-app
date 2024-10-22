@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { convertToGrid } from '../utils/gridConverter';
 import { getCurrentDateTime } from '../utils/dateUtil';
+import { getPrecipitationType } from '../utils/weatherCode';
 
 import '../css/main.css';
 import '../reset.css';
@@ -137,7 +138,7 @@ const KisangcheongTest = () => {
                             <p>온도: {item.obsrValue}°C</p>
                         )}
                         {item.category === "PTY" && (
-                            <p>강수 형태: {item.obsrValue}</p>
+                            <p>강수 형태: {getPrecipitationType(item.obsrValue)}</p>
                         )}
                         {item.category === "REH" && (
                             <p>습도: {item.obsrValue}%</p>
