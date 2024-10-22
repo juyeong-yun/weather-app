@@ -12,3 +12,48 @@ reactJS 기반 토이프로젝트
         
 2. 기온에 맞는 옷차림 추천  
 
+---
+
+📦proxy  
+ ┣ 📂config  
+ ┃ ┗ 📜index.js  
+ ┣ 📂controllers  
+ ┃ ┣ 📜naverController.js  
+ ┃ ┗ 📜weatherController.js  
+ ┣ 📂node_modules   
+ ┣ 📂routes  
+ ┃ ┣ 📜index.js  
+ ┃ ┣ 📜naverRoutes.js  
+ ┃ ┗ 📜weatherRoutes.js  
+ ┣ 📂services  
+ ┃ ┣ 📜naverService.js  
+ ┃ ┗ 📜weatherService.js  
+ ┣ 📜.env  
+ ┣ 📜package.json  
+ ┗ 📜server.js  
+  
+  
+📦weather-app  
+ ┣ 📂node_modules  
+ ┣ 📂src  
+ ┃ ┣ 📂css  
+ ┃ ┃ ┗ 📜main.css  
+ ┃ ┣ 📂pages  
+ ┃ ┃ ┣ 📜ForecastTest.js  
+ ┃ ┃ ┣ 📜KisangcheongTest.js  
+ ┃ ┃ ┣ 📜Main.js  
+ ┃ ┃ ┗ 📜WeatherTest.js  
+ ┃ ┣ 📂utils  
+ ┃ ┃ ┣ 📜dateUtil.js  
+ ┃ ┃ ┗ 📜gridConverter.js  
+ ┃ ┣ 📜App.css  
+ ┃ ┣ 📜App.js  
+ ┃ ┣ 📜App.test.js  
+ ┃ ┣ 📜index.css  
+ ┃ ┣ 📜index.js  
+ ┃ ┣ 📜logo.svg    
+ ┃ ┣ 📜reset.css  
+ ┣ 📜.env  
+ ┣ 📜.gitignore  
+ ┣ 📜README.md  
+ ┗ 📜package.json  
