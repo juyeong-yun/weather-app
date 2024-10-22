@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { convertToGrid } from '../utils/gridConverter';
 
 import '../css/main.css';
 import '../reset.css';
@@ -44,8 +45,11 @@ const KisangcheongTest = () => {
                 // 첫 번째 주소 데이터 선택 (검색한 위치와 가장 가까운 곳을 반환)
                 const { x, y } = geoData.addresses[0];
                 // console.log(`nx: ${x} ny : ${y}`);
-
-                const weatherUrl = `/kisangcheong-test/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${x}&ny=${y}`;
+                
+                // 변환 함수 사용
+                const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
+                
+                const weatherUrl = `/kisangcheong-test/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${gridCoord.nx}&ny=${gridCoord.ny}`;
                 
                 const weatherResp = await fetch(weatherUrl,{
                     method : 'GET',
