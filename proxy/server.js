@@ -39,7 +39,6 @@ const naverApiHandler = async (req, res) => {
         
         const geoID = process.env.API_Naver_ID;
         const geoKey = process.env.API_Naver_Key;
-        console.log(`Naver API ID: ${geoID} | Naver API KEY: ${geoKey}` );
 
         // API Key가 제대로 설정되어 있는지 확인
         if (!geoID || !geoKey) {
@@ -47,6 +46,8 @@ const naverApiHandler = async (req, res) => {
         }
 
         const encodedAddress = encodeURIComponent(address);
+        // console.log("address: ", address);
+
         const response = await fetch(`https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodedAddress}`, {
             headers: {
                 'X-NCP-APIGW-API-KEY-ID': geoID,
@@ -60,7 +61,9 @@ const naverApiHandler = async (req, res) => {
         }
 
         const data = await response.json();
+        // console.log("geoData: ", data);
         res.json(data);
+
 
     } catch (error) {
         console.error('Error in Naver API Handler:', error); // 오류 출력
@@ -68,17 +71,25 @@ const naverApiHandler = async (req, res) => {
     }
 };
 
-// 공통 핸들러 함수: 날씨 API 호출
+// 공통 핸들러 함수: 초단기 실황 날씨 API 호출
 const weatherApiHandler = async (req, res) => {
     try {
-        const { base_date, base_time, nx, ny } = req.query;
-        const apiKey = process.env.API_Kisangcheong;
+        // console.log(req.query);
 
-        if (!base_date || !base_time || !nx || !ny) {
+        const { base_date, base_time, nx, ny } = req.query;
+        // 소수점 아래를 버리고 정수로 변환
+        const truncatedNx = Math.trunc(nx);
+        const truncatedNy = Math.trunc(ny);
+
+        console.log(truncatedNx, truncatedNy);
+
+        const apiKey = process.env.API_Kisangcheong;
+        
+        if (!base_date || !base_time || !truncatedNx || !truncatedNy) {
             return res.status(400).json({ error: 'Missing required query parameters' });
         }
 
-        const response = await fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=${apiKey}&numOfRows=10&pageNo=1&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}&dataType=JSON`);
+        const response = await fetch(`http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=${apiKey}&numOfRows=10&pageNo=1&base_date=${base_date}&base_time=${base_time}&nx=${truncatedNx}&ny=${truncatedNy}&dataType=JSON`);
 
          // 응답 상태가 정상인지 확인
         if (!response.ok) {
@@ -87,19 +98,21 @@ const weatherApiHandler = async (req, res) => {
         }
 
         const data = await response.json();
+        console.log("weather: ", data);
         res.json(data);
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
-// 네이버 API 프록시 경로
+// 루트 페이지 API 프록시 경로
 app.get('/api/naver', naverApiHandler);
-app.get('/kisangcheong-test/api/naver', naverApiHandler);
-
-// 날씨 API 프록시 경로
 app.get('/api/weather', weatherApiHandler);
+
+// 기상청 테스츠 페이지 API 프록시 경로
+app.get('/kisangcheong-test/api/naver', naverApiHandler);
 app.get('/kisangcheong-test/api/weather', weatherApiHandler);
 
 app.listen(PORT, () => {

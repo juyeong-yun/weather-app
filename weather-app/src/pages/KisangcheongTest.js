@@ -7,8 +7,9 @@ const KisangcheongTest = () => {
     const [address, setAddress] = useState('');
     const [inputValue, setInputValue] = useState('');
     const [weatherData, setWeatherData] = useState(null);
-    const [date, setDate] = useState("");
-    const [time, setTime] = useState("");
+    const [geoData, setGeoData] = useState(null);
+    const [baseDate, setBaseDate] = useState("");
+    const [baseTime, setBaseTime] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -36,16 +37,15 @@ const KisangcheongTest = () => {
             });
             
             const geoData = await geoResp.json();
-            
+            setGeoData(geoData); // geoData 상태 설정
+            // console.log("geoData: ", geoData);
+
             if (geoData.addresses && geoData.addresses.length > 0) {
                 // 첫 번째 주소 데이터 선택 (검색한 위치와 가장 가까운 곳을 반환)
-                const addressData = geoData.addresses[0]; 
-                console.log(addressData);
+                const { x, y } = geoData.addresses[0];
+                // console.log(`nx: ${x} ny : ${y}`);
 
-                const { x, y } = addressData;
-                console.log(`x: ${x} y : ${y}`);
-
-                const weatherUrl = `/kisangcheong-test/api/weather/?base_date=${date}&base_time=${time}&nx=${x}&ny=${y}`;
+                const weatherUrl = `/kisangcheong-test/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${x}&ny=${y}`;
                 
                 const weatherResp = await fetch(weatherUrl,{
                     method : 'GET',
@@ -55,7 +55,8 @@ const KisangcheongTest = () => {
                 });
 
                 const weatherData = await weatherResp.json();
-                
+                console.log("weatherData: ", weatherData);
+
             if (weatherResp.ok) {
                 setWeatherData(weatherData);
                 console.log(weatherData);
@@ -73,37 +74,30 @@ const KisangcheongTest = () => {
         setLoading(false);
     }
 
-    }, [address, date, time]);
+    }, [address, baseDate, baseTime]);
 
-    // 오늘 날짜, 다음날 날짜
+    // 오늘 날짜와 시간 계산 (초단기 실황에 맞춤)
     useEffect(() => {
         const currentDate = new Date();
         // console.log(currentDate); 
-        // Tue Oct 15 2024 16:09:44 GMT+0900 (Korean Standard Time)
 
-        // 오늘 날짜와 시간 계산
         const year = currentDate.getFullYear();
         const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1 필요
         const date = String(currentDate.getDate()).padStart(2, "0");
-        const hours = String(currentDate.getHours()).padStart(2, "0");
-        const minutes = String(currentDate.getMinutes()).padStart(2, "0");
-        setDate(`${year}${month}${date}`);
-        setTime(`${hours}${minutes}`);
         
-        // 내일 날짜와 시간 계산 (currentDate에 1일을 더함)
-        const nextDate = new Date(currentDate);
-        nextDate.setDate(currentDate.getDate() + 1);
-        // console.log(nextDate); Wed Oct 16 2024 16:57:51 GMT+0900 (Korean Standard Time)
-        /**
-         * currentDate 객체를 복사하는 코드
-         * currentDate 값을 이용하여 같은 시간을 가진 새로운 Date 객체를 생성
-         */
+        let hours = String(currentDate.getHours()).padStart(2, "0");
         
-        const nextYear = nextDate.getFullYear();
-        const nextMonth = String(nextDate.getMonth() + 1).padStart(2, "0");
-        const nextDay = String(nextDate.getDate()).padStart(2, "0");
-        const nextHours = String(nextDate.getHours()).padStart(2, "0");
-        const nextMinutes = String(nextDate.getMinutes()).padStart(2, "0");
+        // 자정에는 전 날짜로, 아니라면 한 시간씩 뒤로
+        if (hours === 0) {
+            hours = 23;
+            currentDate.setDate(currentDate.getDate()-1);
+        } else {
+            hours -= 1;
+        }
+        const baseTime = String(hours).padStart(2,"0") + "00";
+        
+        setBaseDate(`${year}${month}${date}`);
+        setBaseTime(baseTime);
 
     },[]);
     
@@ -138,19 +132,43 @@ const KisangcheongTest = () => {
             </form>
             {loading && <p>로딩 중...</p>}
             {error && <p>오류발생 : {error}</p>}
-            {weatherData && 
+            {weatherData && geoData && 
 
             /**
              * JSON.stringify()
              * weatherData가 존재할 경우(즉, null이 아니고 데이터가 있는 경우) 
              * 해당 데이터를 JSON 문자열로 변환하여 <div> 안에 표시합니다.
              */
-                <div className='result'> {JSON.stringify(weatherData, null, 2)}
+                <div className='result'>
+                    <h3>지역 : {geoData.addresses[0].roadAddress}</h3>
+                    <h3>{weatherData.response.body.items.item[0].baseDate} {weatherData.response.body.items.item[0].baseTime}</h3>
+                {weatherData.response.body.items.item.map((item, index) => (
+                    // key : 배열의 각 요소를 고유하게 식별하는 데 사용
+                    <div key={index}>
+                        {item.category === "T1H" && (
+                            <p>온도: {item.obsrValue}°C</p>
+                        )}
+                        {item.category === "PTY" && (
+                            <p>강수 형태: {item.obsrValue === "0" ? "없음" : "비 또는 눈"}</p>
+                        )}
+                        {item.category === "REH" && (
+                            <p>습도: {item.obsrValue}%</p>
+                        )}
+                    </div>
+                ))}
                 </div>
                 }
                 <div className='note'>
                     <h3>노트</h3>
                     <ul>
+                        <li> const 와 let 의 차이
+                            <ol>
+                                <li>- const는 값을 변경할 수 없는 상수를 선언하는 데 사용</li>
+                                <li>- let은 값을 재할당할 수 있는 변수를 선언할 때 사용</li>
+                            </ol>
+                        </li>
+                        <li>오늘 날짜 불러오기 <br /> 
+                        new Date(); - Tue Oct 15 2024 16:09:44 GMT+0900 (Korean Standard Time)</li>
                         <li>서버 중지 : ctrl + c</li>
                         <li>서버 다시 시작 : node server.js</li>
                     </ul>
