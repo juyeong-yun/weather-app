@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { fetchGeoData, fetchWeatherData } from '../services/apiService';
+
 import { convertToGrid } from '../utils/gridConverter';
 import { getCurrentDateTime } from '../utils/dateUtil';
 import { getPrecipitationType } from '../utils/weatherCode';
@@ -21,25 +23,8 @@ const KisangcheongTest = () => {
 
         setLoading(true);
         setError(null);
-        
-        /**
-         * encodeURIComponent()
-         * URL 에서 안전하게 사용할 수 있도록 문자열을 인코딩 해준다.
-         * 공백 %20
-         */
-        // 네이버맵 geocoding 
-        const geo = `/kisangcheong-test/api/naver?query=${address}`;
-
-        try{
-            const geoResp = await fetch(geo,{
-                method: 'GET',
-                headers: {
-                    'Accept' : 'application/json',
-                    'Accept-Language' : 'ko',
-                },
-            });
-            
-            const geoData = await geoResp.json();
+        try{ 
+            const geoData = await fetchGeoData(address);
             setGeoData(geoData); // geoData 상태 설정
             // console.log("geoData: ", geoData);
 
@@ -51,28 +36,12 @@ const KisangcheongTest = () => {
                 // 변환 함수 사용
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
                 
-                const weatherUrl = `/kisangcheong-test/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${gridCoord.nx}&ny=${gridCoord.ny}`;
-                
-                const weatherResp = await fetch(weatherUrl,{
-                    method : 'GET',
-                    headers: {
-                        'Accept' : 'application/json',
-                    },
-                });
-
-                const weatherData = await weatherResp.json();
-                console.log("weatherData: ", weatherData);
-
-            if (weatherResp.ok) {
+                const weatherData = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
                 setWeatherData(weatherData);
-                console.log(weatherData);
-            } else {
-                throw new Error('날씨 데이터를 불러오는 중 오류가 발생했습니다.');
-            }
 
-        } else {
-            throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
-        }
+            } else {
+                throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
+            }
     }catch(error) {
         console.error("API 호출 실패", error);
         setError(error.message);
@@ -157,7 +126,9 @@ const KisangcheongTest = () => {
                             </ol>
                         </li>
                         <li>오늘 날짜 불러오기 <br /> 
-                        new Date(); - Tue Oct 15 2024 16:09:44 GMT+0900 (Korean Standard Time)</li>
+                        new Date(); - Tue Oct 15 2024 16:09:44 GMT+0900 (Korean Standard Time)
+                        </li>
+                        <li>encodeURIComponent() : URL 에서 안전하게 사용할 수 있도록 문자열을 인코딩 해준다.</li>
                         <li>서버 중지 : ctrl + c</li>
                         <li>서버 다시 시작 : node server.js</li>
                     </ul>
