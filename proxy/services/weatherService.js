@@ -14,6 +14,8 @@ export const getWeatherData = async (base_date, base_time, nx, ny) => {
     );
 
     if (!response.ok) {
+        const errorText = await response.text(); // 응답 텍스트를 가져옴
+        console.error("Weather API Error:", errorText); // 오류 로그 출력
         throw new Error('Failed to fetch weather data');
     }
 

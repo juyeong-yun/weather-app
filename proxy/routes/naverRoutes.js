@@ -1,3 +1,6 @@
+/**
+ * naver api 호출
+ */
 import express from 'express';
 import { naverApiHandler } from '../controllers/naverController.js';
 
