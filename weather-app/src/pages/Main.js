@@ -2,7 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 import { fetchGeoData, fetchWeatherData } from '../services/apiService';
 
 import { convertToGrid } from '../utils/gridConverter';
-import { getCurrentDateTime, getNexDateTime } from '../utils/dateUtil';
+import { getCurrentDateTime } from '../utils/dateUtil';
 import { getPrecipitationType } from '../utils/weatherCode';
 
 import '../css/main.css';
@@ -25,7 +25,14 @@ const Main = () => {
         setError(null);
 
         try {
-            geoData = await fetchGeoData(address);
+            /**
+             * 현재 페이지가 /kisangcheong-test 인지 확인
+             * window.location: 현재 페이지의 URL 정보를 담고 있는 객체
+             * .includes : 포함되면 true, 포함되지 않으면 false 반환
+             */
+            const isKisangcheongTest = window.location.pathname.includes('kisangcheong-test');
+
+            const geoData = await fetchGeoData(address, isKisangcheongTest);
             setGeoData(geoData);
 
             if (geoData.addresses && geoData.addresses.length > 0) {
@@ -34,13 +41,16 @@ const Main = () => {
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
 
                 const weatherData = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
+                console.log("weather: ", weatherData);
                 setWeatherData(weatherData);
             } else {
                 throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
             }
+
         } catch (error) {
             console.error("API 호출 실패", error);
             setError(error.message);
+        
         } finally {
             setLoading(false);
         }
@@ -52,9 +62,6 @@ const Main = () => {
         
         setBaseDate(date);
         setBaseTime(time);
-
-        const {baseDate: next_date, baseTime : next_time} = getNexDateTime();
-        
     },[]);
 
     useEffect(() => {
@@ -63,10 +70,10 @@ const Main = () => {
         }
     },[address, searchLocationWeather]);
 
-    const handleSubmit = (value) => {
-        value.preventDefault();
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-        setAddress(value);
+        setAddress(inputValue);
         setInputValue('');
     };
 
@@ -84,24 +91,32 @@ const Main = () => {
         
         <div className='searchResult'>
             <div className='resultBox'>
-                <div className='today'>
-                    <div className='todayTemp'>
-                        <span id='name'>지역:</span>
-                        <span id='nowTemp'>기온:</span>
-                        <span id='maxTemp'>최고:</span>
-                        <span id='minTemp'>최저:</span>
+                {weatherData && geoData && 
+                    <div className='today'>
+                        <div id='loc'>
+                            <span></span>
+                            <span>가정동</span>
+                        </div>
+                        <div id='temp'>
+                            <span></span>
+                        </div>
+                        <div id='maxTemp'>
+                            <span>최고:</span>
+                        </div>
+                        <div id='minTemp'>
+                            <span>최저:</span>
+                        </div>
+                        <div>
+
+                        </div>
+                    </div>
+                }
+                </div>
+                <div className='tempByClothes'>
+                    <div id='clothes'>
+                        <span>온도에 맞는 옷차림은 아래와 같습니다.</span>
                     </div>
                 </div>
-                <div className='tomorrow'></div>
-            </div>
-            <div className='tempByClothes'>
-                <div id='temp'>
-                    <span>기온</span>
-                </div>
-                <div id='clothes'>
-
-                </div>
-            </div>
         </div>
     </div>
 

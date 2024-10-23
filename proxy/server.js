@@ -11,7 +11,7 @@ const app = express();
 
 // CORS 설정 (필요에 따라 CLIENT_URL을 설정할 수 있음)
 app.use(cors({ origin: config.clientUrl }));
-app.use(routes);
+app.use('/', routes);
 
 app.listen(config.port, () => {
     console.log(`Server is running on http://localhost:${config.port}`);

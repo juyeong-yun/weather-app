@@ -23,8 +23,13 @@ const KisangcheongTest = () => {
 
         setLoading(true);
         setError(null);
+        
         try{ 
-            const geoData = await fetchGeoData(address);
+            const isKisangcheongTest = window.location.pathname.includes('kisangcheong-test');
+            
+            const geoData = await fetchGeoData(address, isKisangcheongTest);
+            setGeoData(geoData);
+
             setGeoData(geoData); // geoData 상태 설정
             // console.log("geoData: ", geoData);
 

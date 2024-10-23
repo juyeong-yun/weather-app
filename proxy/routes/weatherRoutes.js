@@ -3,7 +3,7 @@ import { weatherApiHandler } from '../controllers/weatherController.js';
 
 const router = express.Router();
 
-router.get('/api/weather', weatherApiHandler);
-router.get('/kisangcheong-test/api/weather', weatherApiHandler);
+router.get('/', weatherApiHandler);
+router.get('/kisangcheong-test', weatherApiHandler);
 
 export default router;

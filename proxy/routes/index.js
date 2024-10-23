@@ -15,7 +15,12 @@ router.get('/kisangcheong-test', (req, res) => {
     res.send('Welcome to kisangcheong-test');
 });
 
-router.use(naverRoutes);
-router.use(weatherRoutes);
+// 기본 API 경로
+router.use('/api/naver',naverRoutes);
+router.use('/api/weather',weatherRoutes);
+
+// kisangcheong-test에 대한 라우트
+router.use('/kisangcheong-test/api/naver', naverRoutes);
+router.use('/kisangcheong-test/api/weather', weatherRoutes);
 
 export default router;

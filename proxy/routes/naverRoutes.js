@@ -1,3 +1,5 @@
+// routes/naverRoutes.js
+
 /**
  * naver api 호출
  */
@@ -6,7 +8,7 @@ import { naverApiHandler } from '../controllers/naverController.js';
 
 const router = express.Router();
 
-router.get('/api/naver', naverApiHandler);
-router.get('/kisangcheong-test/api/naver', naverApiHandler);
+router.get('/', naverApiHandler);
+router.get('/kisangcheong-test', naverApiHandler);
 
 export default router;
