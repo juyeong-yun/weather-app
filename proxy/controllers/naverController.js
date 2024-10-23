@@ -13,7 +13,7 @@ export const naverApiHandler = async (req, res) => {
         }
         
         const data = await getGeocode(address);
-        console.log("naver: " ,data);
+        // console.log("naver: " ,data);
         
         res.json(data);
     } catch (error) {
