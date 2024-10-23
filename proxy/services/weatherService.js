@@ -5,6 +5,14 @@
 import fetch from 'node-fetch';
 import config from '../config/index.js';
 
+/**
+ * 초단기 실황 : 오늘의 예보 가져오기
+ * @param {*} base_date 
+ * @param {*} base_time 
+ * @param {*} nx 
+ * @param {*} ny 
+ * @returns 
+ */
 export const getWeatherData = async (base_date, base_time, nx, ny) => {
     const truncatedNx = Math.trunc(nx);
     const truncatedNy = Math.trunc(ny);

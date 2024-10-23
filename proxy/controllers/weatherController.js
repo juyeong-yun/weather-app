@@ -14,6 +14,7 @@ export const weatherApiHandler = async (req, res) => {
         
         const data = await getWeatherData(base_date, base_time, nx, ny);
         res.json(data);
+
     } catch (error) {
         console.error('Error in Weather API Handler:', error);
         res.status(500).json({ error: 'Internal Server Error' });
