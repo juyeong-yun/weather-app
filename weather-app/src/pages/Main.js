@@ -8,6 +8,9 @@ import { getPrecipitationType } from '../utils/weatherCode';
 import '../css/main.css';
 import '../reset.css';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+
 const Main = () => {
     const [weatherData, setWeatherData] = useState(null);
     const [geoData, setGeoData] = useState(null);
@@ -41,7 +44,7 @@ const Main = () => {
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
 
                 const weatherData = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
-                console.log("weather: ", weatherData);
+                // console.log("weather: ", weatherData);
                 setWeatherData(weatherData);
             } else {
                 throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
@@ -82,9 +85,9 @@ const Main = () => {
         <form onSubmit={handleSubmit}>
             <div className="searchRegion">
                 <div className='search'>
-                    <h3>어디를 검색할까요? : </h3>
-                    <input type="text" value={inputValue} onChange={(value) => setInputValue(value.target.value)} />
-                    <button type="submit">검색</button>
+                    <input type="text" placeholder='원하는 장소를 검색해 주세요' 
+                    value={inputValue} onChange={(value) => setInputValue(value.target.value)} />
+                    <button type="submit"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
                 </div>
             </div>
         </form>

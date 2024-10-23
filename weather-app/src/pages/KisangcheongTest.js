@@ -84,9 +84,8 @@ const KisangcheongTest = () => {
             <form onSubmit={handleSubmit}>
                 <div className="searchRegion">
                     <div className='search'>
-                        <h3>어느 지역의 날씨를 알고 싶나요? </h3>
-                        <input type="text" value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}  />
+                        <input type="text" placeholder='원하는 장소를 검색해 주세요'
+                        value={inputValue} onChange={(e) => setInputValue(e.target.value)}  />
                         <button type="submit">검색</button>
                     </div>
                 </div>

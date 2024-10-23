@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
-* {
-    font-family: "Lato", sans-serif;
-}
-
-body { padding: 10px;}
+body { padding: 10px; font-family: "Lato", sans-serif;}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -34,10 +30,10 @@ body { padding: 10px;}
 }
 
 /* 전체적인 페이지 너비 */
-.container { margin: 20px 10px 0 20px; padding: 10px;}
+.container { margin: 8px 5px; padding: 8px;}
 
 /* 메뉴바 */
-.menuBar nav { display: block; margin-bottom: 20px;}
-.menuBar nav a { margin-right: 15px; color: #282c34; 
-  text-decoration: none; font-size: 18px;}
+.menuBar nav { display: block; margin-bottom: 10px; text-align: center;}
+.menuBar nav a { margin-right: 30px; color: #282c34; 
+  text-decoration: none; font-size: 15px; }
 .menuBar nav a:hover {color: lightblue;}
