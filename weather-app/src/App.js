@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router, Routes, Route, Link} from 'react-router-dom';
+import {Routes, Route, Link} from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons'; // 필요한 아이콘 추가

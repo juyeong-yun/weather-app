@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
+import axios from 'axios';
 import { fetchGeoData, fetchWeatherData } from '../services/apiService';
 
 import { convertToGrid } from '../utils/gridConverter';
@@ -9,7 +10,8 @@ import '../css/main.css';
 import '../reset.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { response } from 'express';
 
 const Main = () => {
     const [weatherData, setWeatherData] = useState(null);
@@ -20,6 +22,16 @@ const Main = () => {
     const [baseTime, setBaseTime] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        axios.get('http://localhost:4000/api/weather')
+        .then( response => {
+            setWeatherData(response.data);
+        })
+        .catch(error => {
+            console.error("Error fetching weather data:", error);
+        });
+    }, []);
     
     const searchLocationWeather = useCallback( async () =>{
         if(!address) return;
@@ -44,7 +56,7 @@ const Main = () => {
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
 
                 const weatherData = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
-                // console.log("weather: ", weatherData);
+                console.log("weather: ", weatherData);
                 setWeatherData(weatherData);
             } else {
                 throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
@@ -97,18 +109,27 @@ const Main = () => {
                 {weatherData && geoData && 
                     <div className='today'>
                         <div id='loc'>
-                            <span></span>
-                            <span>가정동</span>
+                            <span><FontAwesomeIcon icon={faLocationDot} /> {geoData.addresses[0].roadAddress}</span>
                         </div>
-                        <div id='temp'>
-                            <span></span>
-                        </div>
-                        <div id='maxTemp'>
-                            <span>최고:</span>
-                        </div>
-                        <div id='minTemp'>
-                            <span>최저:</span>
-                        </div>
+                        {weatherData.response.body.items.item.map((item, index) => (
+                            <div key={index}>
+                                {item.category === "T1H" && (
+                                        <div id='temp'>
+                                            <span>현재 온도: {item.obsrValue}°C</span>
+                                        </div>
+                                    )}
+                                    {item.category === "REH" && (
+                                        <div id='reh'>
+                                            <span>습도: {item.obsrValue}%</span>
+                                        </div>
+                                    )}
+                                    {item.category === "PTY" && (
+                                        <div id='pty'>
+                                            <span>강수 형태: {getPrecipitationType(item.obsrValue)}</span>
+                                        </div>
+                                    )}
+                            </div>
+                        ))}
                         <div>
 
                         </div>
