@@ -60,7 +60,7 @@ const WeatherTest = () => {
     return (
         <div className="container">
             <div className='title'>
-                <h3>weather test page</h3>
+                <h3>weather test page : 영어로 작성</h3>
             </div>
 
             <form onSubmit={handleSubmit}>
