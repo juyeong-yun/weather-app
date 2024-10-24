@@ -17,7 +17,13 @@ app.use(express.json());
 // 깃허브 서버 배포, 로컬
 app.use(cors({ origin: config.clientUrl || 'http://localhost:3000' }));
 
-app.use('/', routes);
+app.use('/api', routes);
+
+// 기본 에러 핸들링
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 app.listen(config.port, () => {
     console.log(`Server is running on http://localhost:${config.port}`);
