@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import { fetchGeoData, fetchWeatherData } from '../services/apiService';
 
 import { convertToGrid } from '../utils/gridConverter';
@@ -17,6 +18,31 @@ const KisangcheongTest = () => {
     const [baseTime, setBaseTime] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async() => {
+            setLoading(true);
+            setError(null);
+
+            const baseUrl = process.env.REACT_APP_BASE_URL;
+            try{
+                const [geoResponse, weatherResponse] = await Promise.all([
+                    axios.get(`${baseUrl}/api/naver`),
+                    axios.get(`${baseUrl}/api/weather`)
+                ]);
+                
+                setGeoData(geoResponse.data);
+                setWeatherData(weatherResponse.data);
+            } catch (error){
+                console.error("데이터 가져오는 중 오류 발생: ", error);
+                setError("데이터 가져오는 중 오류 발생");
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        fetchData();
+    }, []);
 
     const fetchKisangcheongData = useCallback(async() => {
         if (!address) return;

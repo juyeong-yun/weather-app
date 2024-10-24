@@ -10,7 +10,7 @@ import '../css/main.css';
 import '../reset.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faLocationDot, faL } from '@fortawesome/free-solid-svg-icons';
 import { response } from 'express';
 
 const Main = () => {
@@ -24,13 +24,30 @@ const Main = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get('http://localhost:4000/api/weather')
-        .then( response => {
-            setWeatherData(response.data);
-        })
-        .catch(error => {
-            console.error("Error fetching weather data:", error);
-        });
+        const fetchData = async() => {
+            setLoading(true);
+            setError(null);
+            
+            /**
+             * 서버 연결
+             */
+            const baseUrl = process.env.REACT_APP_BASE_URL;
+            try{
+                const [geoResponse, weatherResponse] = await Promise.all([
+                    axios.get(`${baseUrl}/api/naver`),
+                    axios.get(`${baseUrl}/api/weather`)
+                ]);
+                setGeoData(geoResponse.data);
+                setWeatherData(weatherResponse.data);
+            } catch (error){
+                console.error("데이터 가져오는 중 오류 발생: ", error);
+                setError("데이터 가져오는 중 오류 발생");
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        fetchData();
     }, []);
     
     const searchLocationWeather = useCallback( async () =>{
