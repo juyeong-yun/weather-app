@@ -1,3 +1,4 @@
+// ../controllers/naverController.js
 /**
  * geocoding 좌표
  */

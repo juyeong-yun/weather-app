@@ -1,3 +1,4 @@
+// ../controllers/weatherController.js
 /**
  * 기상청 날씨 가져오기
  */
