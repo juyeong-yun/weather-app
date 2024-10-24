@@ -11,7 +11,7 @@ import '../reset.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faLocationDot, faL } from '@fortawesome/free-solid-svg-icons';
-import { response } from 'express';
+// import { response } from 'express';
 
 const Main = () => {
     const [weatherData, setWeatherData] = useState(null);
