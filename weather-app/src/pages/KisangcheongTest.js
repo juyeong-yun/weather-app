@@ -24,7 +24,8 @@ const KisangcheongTest = () => {
             setLoading(true);
             setError(null);
 
-            const baseUrl = process.env.REACT_APP_BASE_URL;
+            //  GitHub Pages는 이 파일을 직접 사용할 수 없기 때문
+            const baseUrl = process.env.REACT_APP_BASE_URL  || 'http://localhost:4000';
             try{
                 const [geoResponse, weatherResponse] = await Promise.all([
                     axios.get(`${baseUrl}/api/naver`),

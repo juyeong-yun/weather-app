@@ -2,6 +2,7 @@
 // const express = require('express');
 // const fetch = require('node-fetch');
 // const cors = require('cors');
+import process from 'process';
 import express from 'express';
 import cors from 'cors';
 import config from './config/index.js';
@@ -13,7 +14,8 @@ const app = express();
 app.use(express.json());
 
 // CORS 설정 (필요에 따라 CLIENT_URL을 설정할 수 있음)
-app.use(cors({ origin: config.clientUrl }));
+// 깃허브 서버 배포, 로컬
+app.use(cors({ origin: config.clientUrl || 'http://localhost:3000' }));
 
 app.use('/', routes);
 
