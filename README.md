@@ -11,7 +11,11 @@ reactJS 기반 토이프로젝트
         - 네이버맵 API 사용
         
 2. 기온에 맞는 옷차림 추천  
-
+  
+    
+## 서버 (NodeJS(express) 연동 진행중)
+https://juyeong-yun.github.io/weather-app/  
+  
 ---
 
 📦proxy  
