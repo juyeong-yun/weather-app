@@ -16,8 +16,16 @@ app.use(express.json());
 // CORS 설정 (필요에 따라 CLIENT_URL을 설정할 수 있음)
 // 깃허브 서버 배포, 로컬
 // 환경 변수를 사용한 CORS 설정
-const allowedOrigin = process.env.CLIENT_URL || 'http://localhost:3000';
-app.use(cors({ origin: allowedOrigin }));
+// const allowedOrigin = process.env.CLIENT_URL || 'http://localhost:3000';
+// app.use(cors({ origin: allowedOrigin }));
+
+const corsOptions = {
+    origin: ['http://localhost:3000', process.env.CLIENT_URL], // 허용할 출처
+    methods: ['GET', 'POST'], // 허용할 HTTP 메서드
+    credentials: true, // 자격 증명 허용
+};
+
+app.use(cors(corsOptions));
 
 app.use('/api', routes);
 
