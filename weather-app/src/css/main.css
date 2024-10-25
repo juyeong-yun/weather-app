@@ -18,7 +18,3 @@ Test Page
 .result { margin-top: 10px;}
 .result h4, .result p {padding: 10px 0;}
 
-.note { margin-top: 10%;}
-.note li {display: block; padding: 10px 0; line-height: initial;}
-.note li ol li{padding: 10px 15px;}
-

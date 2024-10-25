@@ -1,0 +1,10 @@
+.note { margin-top: 10px;}
+.note {display: flex; align-items: flex-start;}
+
+.study {border-right: 1px solid #dedddd}
+
+.study, .forServer {width: 48%; padding: 0 10px;}
+.study h3, .forServer h3 {font-size: 18px; font-weight:500; margin-bottom: 10px;}
+.study li, .forServer li {display: block; padding: 10px 0; font-size: 17px;}
+.study li ol, .forServer li ol {margin-top: 5px;}
+.study li ol li, .forServer li ol li{padding: 6px 15px; font-size: 16px;}
