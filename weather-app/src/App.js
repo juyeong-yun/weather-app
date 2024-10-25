@@ -8,6 +8,7 @@ import Main from "./pages/Main";
 import WeatherTest from './pages/WeatherTest';
 import ForecastTest from './pages/ForecastTest';
 import KisangcheongTest from './pages/KisangcheongTest';
+import Note from './pages/Note';
 
 import './App.css';
 
@@ -21,6 +22,7 @@ function App() {
                 <Link to="/weather-test">Weather</Link>
                 <Link to="/forecast-test">Forecast</Link>
                 <Link to="/kisangcheong-test">Kisangcheong</Link>
+                <Link to="/study-note">Note</Link>
               </nav>
           </div>
         </div>
@@ -29,6 +31,7 @@ function App() {
             <Route path='/weather-test' element={<WeatherTest />}/>
             <Route path='/forecast-test' element={<ForecastTest />}/>
             <Route path='/kisangcheong-test' element={<KisangcheongTest />}/>
+            <Route path='/study-note' element={<Note />}/>
           </Routes>
       </div>
   );
