@@ -55,6 +55,7 @@ const Note = () => {
                 <div className='forServer'>
                     <h3>서버 명령어</h3>
                     <ul>
+                        <li>서버 폴더에도 .gitignore 필수</li>
                         <li> 명령어
                             <ol>
                                 <li>서버 중지: <code>ctrl + c</code></li>
