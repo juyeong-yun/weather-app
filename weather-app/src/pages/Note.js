@@ -57,6 +57,12 @@ const Note = () => {
                     <ul>
                         <li>서버 폴더에도 .gitignore 필수</li>
                         <li> 명령어
+                        <li>깃허브 페이지 이용시 주의 사항
+                            <ol>
+                                <li>배포 시 .env에 담긴 정보를 사용하려면 서버를 따로 배포해야 한다.</li>
+                                <li>local 에서 proxy 설정을 통해 .env 파일 사용 가능</li>
+                            </ol>
+                        </li>
                             <ol>
                                 <li>서버 중지: <code>ctrl + c</code></li>
                                 <li>서버 다시 시작: <code>node server.js</code></li>
