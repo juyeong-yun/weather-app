@@ -102,14 +102,6 @@ const ForecastTest = () => {
                                 <p>----------------------</p>
                             </div>
                         ))}
-
-                        <div className='note'>
-                            <h3>신경 쓸 점</h3>
-                            <ul>
-                                <li>1. 당일에 가장 가까운 시간대</li>
-                                <li>2. 다음날은? 어떻게 표기하는 걸까?</li>
-                            </ul>
-                        </div>
                     </div>
                 ))}
         </div>
