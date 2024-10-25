@@ -145,23 +145,6 @@ const KisangcheongTest = () => {
                 ))}
                 </div>
                 }
-                <div className='note'>
-                    <h3>노트</h3>
-                    <ul>
-                        <li> const 와 let 의 차이
-                            <ol>
-                                <li>- const는 값을 변경할 수 없는 상수를 선언하는 데 사용</li>
-                                <li>- let은 값을 재할당할 수 있는 변수를 선언할 때 사용</li>
-                            </ol>
-                        </li>
-                        <li>오늘 날짜 불러오기 <br /> 
-                        new Date(); - Tue Oct 15 2024 16:09:44 GMT+0900 (Korean Standard Time)
-                        </li>
-                        <li>encodeURIComponent() : URL 에서 안전하게 사용할 수 있도록 문자열을 인코딩 해준다.</li>
-                        <li>서버 중지 : ctrl + c</li>
-                        <li>서버 다시 시작 : node server.js</li>
-                    </ul>
-                </div>
         </div>
     )
 };
