@@ -11,23 +11,26 @@ export const fetchGeoData = async (address, isKisangcheongTest) => {
      * encodeURIComponent() : URL 에서 안전하게 사용할 수 있도록 문자열을 인코딩 해준다.
      * 공백 %20
      */
-    const geoUrl = isKisangcheongTest 
-        ? `${baseName}/kisangcheong-test/api/naver?query=${encodeURIComponent(address)}` 
-        : `${baseName}/api/naver?query=${encodeURIComponent(address)}`;
-    
-    const response = await fetch(geoUrl, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Accept-Language': 'ko',
-        },
-    });
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch geocoding data');
+    if (address) {
+        const geoUrl = isKisangcheongTest 
+            ? `${baseName}/kisangcheong-test/api/naver?query=${encodeURIComponent(address)}` 
+            : `${baseName}/api/naver?query=${encodeURIComponent(address)}`;
+            const response = await fetch(geoUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Accept-Language': 'ko',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch geocoding data');
+            }
+        
+            return response.json();
     }
-
-    return response.json();
+    
 };
 
 /**
@@ -41,7 +44,9 @@ export const fetchGeoData = async (address, isKisangcheongTest) => {
 export const fetchWeatherData = async (baseDate, baseTime, nx, ny, isKisangcheongTest) => {
     const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
     
-    const weatherUrl = isKisangcheongTest 
+    if (baseDate && baseTime && nx && ny){
+        
+        const weatherUrl = isKisangcheongTest 
         ? `${baseName}/kisangcheong-test/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`
         : `${baseName}/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
     
@@ -57,4 +62,5 @@ export const fetchWeatherData = async (baseDate, baseTime, nx, ny, isKisangcheon
     }
 
     return response.json();
+    }
 };
