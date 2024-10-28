@@ -19,12 +19,13 @@ const KisangcheongTest = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
+
     useEffect(() => {
         const fetchData = async() => {
             setLoading(true);
             setError(null);
-
-            const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
+            
             //  GitHub Pages는 이 파일을 직접 사용할 수 없기 때문
             const baseUrl = process.env.REACT_APP_BASE_URL  || 'http://localhost:4000';
             try{
@@ -53,7 +54,8 @@ const KisangcheongTest = () => {
         setError(null);
         
         try{ 
-            const isKisangcheongTest = window.location.pathname.includes('kisangcheong-test');
+            const isKisangcheongTest = window.location.pathname.replace(baseName, '').includes('kisangcheong-test');
+            // console.log("기상청 단어 포함 : ", isKisangcheongTest);
 
             const geoData = await fetchGeoData(address, isKisangcheongTest);
             setGeoData(geoData); // geoData 상태 설정

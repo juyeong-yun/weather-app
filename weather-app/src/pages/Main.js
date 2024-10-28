@@ -23,6 +23,8 @@ const Main = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
+    
     useEffect(() => {
         const fetchData = async() => {
             setLoading(true);
@@ -32,7 +34,7 @@ const Main = () => {
              * 서버 연결
              * GitHub Pages는 이 파일을 직접 사용할 수 없음
              */
-            const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
+            
             const baseUrl = process.env.REACT_APP_BASE_URL  || 'http://localhost:4000';
             try{
                 const [geoResponse, weatherResponse] = await Promise.all([
@@ -64,7 +66,7 @@ const Main = () => {
              * window.location: 현재 페이지의 URL 정보를 담고 있는 객체
              * .includes : 포함되면 true, 포함되지 않으면 false 반환
              */
-            const isKisangcheongTest = window.location.pathname.includes('kisangcheong-test');
+            const isKisangcheongTest = window.location.pathname.replace(baseName, '').includes('kisangcheong-test');
 
             const geoData = await fetchGeoData(address, isKisangcheongTest);
             setGeoData(geoData);
