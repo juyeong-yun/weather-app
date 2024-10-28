@@ -27,7 +27,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use('/api', routes);
+/**
+ * basename이 포함된 전체 경로로 설정하여 /weather-app을 항상 앞에 추가
+ */
+app.use('/weather-app/api', routes);
 
 // 기본 에러 핸들링
 app.use((err, req, res, next) => {
