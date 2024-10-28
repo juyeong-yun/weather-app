@@ -24,12 +24,13 @@ const KisangcheongTest = () => {
             setLoading(true);
             setError(null);
 
+            const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
             //  GitHub Pages는 이 파일을 직접 사용할 수 없기 때문
             const baseUrl = process.env.REACT_APP_BASE_URL  || 'http://localhost:4000';
             try{
                 const [geoResponse, weatherResponse] = await Promise.all([
-                    axios.get(`${baseUrl}/api/naver`),
-                    axios.get(`${baseUrl}/api/weather`)
+                    axios.get(`${baseUrl}${baseName}/api/naver`),
+                    axios.get(`${baseUrl}${baseName}/api/weather`)
                 ]);
                 
                 setGeoData(geoResponse.data);

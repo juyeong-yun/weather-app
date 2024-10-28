@@ -10,7 +10,7 @@ import '../css/main.css';
 import '../reset.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faLocationDot, faL } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faLocationDot} from '@fortawesome/free-solid-svg-icons';
 // import { response } from 'express';
 
 const Main = () => {
@@ -32,11 +32,12 @@ const Main = () => {
              * 서버 연결
              * GitHub Pages는 이 파일을 직접 사용할 수 없음
              */
+            const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
             const baseUrl = process.env.REACT_APP_BASE_URL  || 'http://localhost:4000';
             try{
                 const [geoResponse, weatherResponse] = await Promise.all([
-                    axios.get(`${baseUrl}/api/naver`),
-                    axios.get(`${baseUrl}/api/weather`)
+                    axios.get(`${baseUrl}${baseName}/api/naver`),
+                    axios.get(`${baseUrl}${baseName}/api/weather`)
                 ]);
                 setGeoData(geoResponse.data);
                 setWeatherData(weatherResponse.data);

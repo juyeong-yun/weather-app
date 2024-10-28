@@ -27,8 +27,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// 모든 요청에 대해 /weather-app 경로를 추가
-app.use('/weather-app', routes);
+// 모든 요청
+app.use('/', routes);
 
 // 기본 에러 핸들링
 app.use((err, req, res, next) => {
