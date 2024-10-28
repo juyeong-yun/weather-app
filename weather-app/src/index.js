@@ -6,9 +6,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const basename = process.env.REACT_APP_BASENAME || '/weather-app';
+
 root.render(
   <React.StrictMode>
-    <BrowserRouter basename="/weather-app">
+    <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>
   </React.StrictMode>
