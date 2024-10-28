@@ -64,9 +64,9 @@ const Note = () => {
                         </li>
                         <li> 명령어
                             <ol>
-                                <li>서버 중지: <code>ctrl + c</code></li>
+                                <li>서버 중지: <code>ctrl(cmd) + c</code></li>
                                 <li>서버 다시 시작: <code>node server.js</code></li>
-                                <li>nodemon: <code>node start dev</code></li>
+                                <li>nodemon: <code>npm run dev</code></li>
                             </ol>
                         </li>
                     </ul>
