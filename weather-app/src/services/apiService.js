@@ -6,13 +6,14 @@
  * @returns 
  */
 export const fetchGeoData = async (address, isKisangcheongTest) => {
+    const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
     /**
      * encodeURIComponent() : URL 에서 안전하게 사용할 수 있도록 문자열을 인코딩 해준다.
      * 공백 %20
      */
     const geoUrl = isKisangcheongTest 
-        ? `/kisangcheong-test/api/naver?query=${encodeURIComponent(address)}` 
-        : `/api/naver?query=${encodeURIComponent(address)}`;
+        ? `${baseName}/kisangcheong-test/api/naver?query=${encodeURIComponent(address)}` 
+        : `${baseName}/api/naver?query=${encodeURIComponent(address)}`;
     
     const response = await fetch(geoUrl, {
         method: 'GET',
@@ -38,9 +39,11 @@ export const fetchGeoData = async (address, isKisangcheongTest) => {
  * @returns 
  */
 export const fetchWeatherData = async (baseDate, baseTime, nx, ny, isKisangcheongTest) => {
+    const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
+    
     const weatherUrl = isKisangcheongTest 
-        ? `/kisangcheong-test/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`
-        : `/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
+        ? `${baseName}/kisangcheong-test/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`
+        : `${baseName}/api/weather/?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
     
     const response = await fetch(weatherUrl, {
         method: 'GET',
