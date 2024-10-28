@@ -15,11 +15,11 @@ router.get('/kisangcheong-test', (req, res) => {
     res.send('Welcome to kisangcheong-test');
 });
 
-// 기본 API 경로에 weather-app을 추가
+// 기본 API 경로
 router.use('/api/naver', naverRoutes);
 router.use('/api/weather', weatherRoutes);
 
-// kisangcheong-test에 대한 라우트도 weather-app을 포함
+// kisangcheong-test에 대한 라우트
 router.use('/kisangcheong-test/api/naver', naverRoutes);
 router.use('/kisangcheong-test/api/weather', weatherRoutes);
 
