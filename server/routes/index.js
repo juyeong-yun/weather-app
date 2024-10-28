@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/kisangcheong-test', (req, res) => {
-    res.send('Welcome to kisangcheong-test');
+    res.send('Welcome to kisangcheong-test API server');
 });
 
 // 기본 API 경로
