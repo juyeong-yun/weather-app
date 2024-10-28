@@ -37,11 +37,12 @@ export const getWeatherData = async (base_date, base_time, nx, ny) => {
                 dataType : 'JSON',
                 base_date,
                 base_time,
-                nx,
-                ny
+                truncatedNx,
+                truncatedNy
             }
         });
         return response.json();
+
     } catch (error) {
         console.error("Weather API Error:", error);
         throw error;
