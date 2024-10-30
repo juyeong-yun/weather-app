@@ -14,9 +14,8 @@ export const naverApiHandler = async (req, res) => {
         }
         
         const data = await getGeocode(address);
-        // console.log("naver: " ,data);
-        
         res.json(data);
+
     } catch (error) {
         console.error('Error in Naver API Handler:', error);
         res.status(500).json({ error: 'Internal Server Error' });
