@@ -8,7 +8,7 @@ import { getWeatherData } from '../services/weatherService.js';
 export const weatherApiHandler = async (req, res) => {
     try {
         const { base_date, base_time, nx, ny } = req.query;
-        
+
         if (!base_date || !base_time || !nx || !ny) {
             return res.status(400).json({ error: 'Missing required query parameters' });
         }
