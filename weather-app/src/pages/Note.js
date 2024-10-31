@@ -69,6 +69,13 @@ const Note = () => {
                                 <li>nodemon: <code>npm run dev</code></li>
                             </ol>
                         </li>
+                        <li>JSON.stringify()
+                            <ol>
+                                <li>JavaScript 값이나 객체를 JSON 문자열로 변환</li>
+                                <li>Data가 존재할 경우(null이 아닌) 해당 데이터를 JSON 문자열로 변환하여 div 안에 표시</li>
+                                <li>예시 : console.log("res data (JSON):", JSON.stringify(response.data, null, 2));</li>
+                            </ol>
+                        </li>
                     </ul>
                 </div>
             </div>
