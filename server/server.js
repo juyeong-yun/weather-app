@@ -27,8 +27,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// 모든 요청
-app.use('/', routes);
+// 모든 요청에 weather-app 을 추가 : basename
+app.use('/weather-app', routes);
 
 // 기본 에러 핸들링
 app.use((err, req, res, next) => {
