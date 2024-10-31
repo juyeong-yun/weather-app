@@ -24,16 +24,13 @@ const Main = () => {
     const [error, setError] = useState(null);
 
     const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
-    
+
     useEffect(() => {
         const fetchData = async() => {
             setLoading(true);
             setError(null);
             
-            /**
-             * 서버 연결
-             * GitHub Pages는 이 파일을 직접 사용할 수 없음
-             */
+            // 서버 연결 - GitHub Pages는 이 파일을 직접 사용할 수 없음
             
             const baseUrl = process.env.REACT_APP_BASE_URL  || 'http://localhost:4000';
             try{
@@ -52,7 +49,7 @@ const Main = () => {
         }
         
         fetchData();
-    }, []);
+    }, [baseName]);
     
     const searchLocationWeather = useCallback( async () =>{
         if(!address) return;
@@ -70,14 +67,16 @@ const Main = () => {
 
             const geoData = await fetchGeoData(address, isKisangcheongTest);
             setGeoData(geoData);
+            // console.log(geoData);
 
             if (geoData.addresses && geoData.addresses.length > 0) {
                 const { x, y } = geoData.addresses[0];
-
+                // console.log(`nx: ${x} ny : ${y}`);
+                
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
 
                 const weatherData = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
-                console.log("weather: ", weatherData);
+                // console.log("weather: ", weatherData);
                 setWeatherData(weatherData);
             } else {
                 throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
@@ -91,7 +90,7 @@ const Main = () => {
             setLoading(false);
         }
         
-    } , [address, baseDate, baseTime]);
+    } , [address, baseDate, baseTime, baseName]);
 
     useEffect(() => {
         const {baseDate: date, baseTime : time} = getCurrentDateTime();
@@ -100,18 +99,22 @@ const Main = () => {
         setBaseTime(time);
     },[]);
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+       // 입력 값이 비어 있지 않은 경우에만 주소를 설정
+        if (inputValue.trim()) {
+            setAddress(inputValue);
+            setInputValue('');
+        }
+    };
+
     useEffect(() => {
+        // address가 비어 있지 않을 때만 searchLocationWeather 호출
         if(address) {
             searchLocationWeather();
         }
     },[address, searchLocationWeather]);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        setAddress(inputValue);
-        setInputValue('');
-    };
 
     return (
     <div className="container">
@@ -127,7 +130,8 @@ const Main = () => {
         
         <div className='searchResult'>
             <div className='resultBox'>
-                {weatherData && geoData && 
+                {/* optional chaining (?.)을 사용하여 중간에 undefined인 경우에도 오류가 발생하지 않도록 처리 */}
+                {weatherData && geoData && weatherData.response?.body?.items?.item && (
                     <div className='today'>
                         <div id='loc'>
                             <span><FontAwesomeIcon icon={faLocationDot} /> {geoData.addresses[0].roadAddress}</span>
@@ -155,7 +159,7 @@ const Main = () => {
 
                         </div>
                     </div>
-                }
+                )}
                 </div>
                 <div className='tempByClothes'>
                     <div id='clothes'>
