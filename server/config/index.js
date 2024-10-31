@@ -1,6 +1,5 @@
-/**
- * 환경변수 및 설정
- */
+// ./config/index.js
+
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -12,6 +11,6 @@ export default {
         key: process.env.API_Naver_Key
     },
     weather: {
-        key: process.env.API_Kisangcheong
+        serviceKey: process.env.API_Kisangcheong
     }
 };

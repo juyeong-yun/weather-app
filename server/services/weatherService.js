@@ -18,6 +18,8 @@ export const getWeatherData = async (base_date, base_time, nx, ny) => {
 
     const truncatedNx = Math.trunc(nx);
     const truncatedNy = Math.trunc(ny);
+
+    console.log("기상청 서비스키 : ", config.weather.serviceKey);
     
     try {
         /*
@@ -30,11 +32,10 @@ export const getWeatherData = async (base_date, base_time, nx, ny) => {
             throw new Error('Failed to fetch weather data');
         }
         */
-        // console.log(config.weather.key);
 
         const response = await axios.get('http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst', {
             params : {
-                serviceKey : config.weather.key,
+                serviceKey : config.weather.serviceKey, // 서비스 키를 인코딩
                 numOfRows : 10,
                 pageNo : 1,
                 dataType : 'JSON',
@@ -46,6 +47,7 @@ export const getWeatherData = async (base_date, base_time, nx, ny) => {
         });
         // response.data를 사용하여 JSON 데이터를 반환
         // console.log("res data (JSON):", JSON.stringify(response.data, null, 2));
+        
         return response.data;
 
     } catch (error) {
