@@ -45,7 +45,7 @@ const KisangcheongTest = () => {
         }
         
         fetchData();
-    }, []);
+    }, [baseName]);
 
     const fetchKisangcheongData = useCallback(async() => {
         if (!address) return;
@@ -58,7 +58,7 @@ const KisangcheongTest = () => {
             // console.log("기상청 단어 포함 : ", isKisangcheongTest);
 
             const geoData = await fetchGeoData(address, isKisangcheongTest);
-            setGeoData(geoData); // geoData 상태 설정
+            setGeoData(geoData);
             // console.log("geoData: ", geoData);
 
             if (geoData.addresses && geoData.addresses.length > 0) {
@@ -69,7 +69,8 @@ const KisangcheongTest = () => {
                 // 변환 함수 사용
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
                 
-                const weatherData = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
+                const weatherData = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny, isKisangcheongTest);
+                // console.log("테스트 weather : ", weatherData);
                 setWeatherData(weatherData);
 
             } else {
@@ -82,7 +83,7 @@ const KisangcheongTest = () => {
         setLoading(false);
     }
 
-    }, [address, baseDate, baseTime]);
+    }, [address, baseDate, baseTime, baseName]);
 
     // 구하는 날짜와 시간 계산 (초단기 실황에 맞춤)
     useEffect(() => {
@@ -95,11 +96,15 @@ const KisangcheongTest = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        setAddress(inputValue);
-        setInputValue('');
+       // 입력 값이 비어 있지 않은 경우에만 주소를 설정
+        if (inputValue.trim()) {
+            setAddress(inputValue);
+            setInputValue('');
+        }
     };
 
     useEffect(() => {
+        // address가 비어 있지 않을 때만 fetchKisangcheongData 호출
         if(address) {
             fetchKisangcheongData();
         }
@@ -122,32 +127,33 @@ const KisangcheongTest = () => {
             </form>
             {loading && <p>로딩 중...</p>}
             {error && <p>오류발생 : {error}</p>}
-            {weatherData && geoData && 
+            {weatherData && geoData && weatherData.response?.body?.items?.item && (
 
-            /**
-             * JSON.stringify()
-             * weatherData가 존재할 경우(즉, null이 아니고 데이터가 있는 경우) 
-             * 해당 데이터를 JSON 문자열로 변환하여 <div> 안에 표시합니다.
-             */
                 <div className='result'>
                     <h3>지역 : {geoData.addresses[0].roadAddress}</h3>
                     <h3>{weatherData.response.body.items.item[0].baseDate} {weatherData.response.body.items.item[0].baseTime}</h3>
-                {weatherData.response.body.items.item.map((item, index) => (
-                    // key : 배열의 각 요소를 고유하게 식별하는 데 사용
-                    <div key={index}>
-                        {item.category === "T1H" && (
-                            <p>온도: {item.obsrValue}°C</p>
-                        )}
-                        {item.category === "PTY" && (
-                            <p>강수 형태: {getPrecipitationType(item.obsrValue)}</p>
-                        )}
-                        {item.category === "REH" && (
-                            <p>습도: {item.obsrValue}%</p>
-                        )}
+                        {weatherData.response.body.items.item.map((item, index) => (
+                            // key : 배열의 각 요소를 고유하게 식별하는 데 사용
+                            <div key={index}>
+                                {item.category === "T1H" && (
+                                        <div id='temp'>
+                                            <span>현재 온도: {item.obsrValue}°C</span>
+                                        </div>
+                                    )}
+                                    {item.category === "REH" && (
+                                        <div id='reh'>
+                                            <span>습도: {item.obsrValue}%</span>
+                                        </div>
+                                    )}
+                                    {item.category === "PTY" && (
+                                        <div id='pty'>
+                                            <span>강수 형태: {getPrecipitationType(item.obsrValue)}</span>
+                                        </div>
+                                    )}
+                            </div>
+                        ))}
                     </div>
-                ))}
-                </div>
-                }
+                )}
         </div>
     )
 };
