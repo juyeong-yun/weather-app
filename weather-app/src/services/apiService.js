@@ -18,8 +18,8 @@ export const fetchGeoData = async (address, isKisangcheongTest) => {
         const geoUrl = isKisangcheongTest 
             ? `${baseName}/kisangcheong-test/api/naver?query=${encodeURIComponent(address)}` 
             : `${baseName}/api/naver?query=${encodeURIComponent(address)}`;
+            // console.log("geo url: ", geoUrl);
 
-            // console.log(geoUrl);
             const response = await fetch(geoUrl, {
                 method: 'GET',
                 headers: {
@@ -53,8 +53,7 @@ export const fetchWeatherData = async (baseDate, baseTime, nx, ny, isKisangcheon
         const weatherUrl = isKisangcheongTest 
         ? `${baseName}/kisangcheong-test/api/weather?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`
         : `${baseName}/api/weather?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
-        
-        console.log("weather url : ", weatherUrl);
+        // console.log("weather url : ", weatherUrl);
         
         const response = await fetch(weatherUrl, {
             method: 'GET',
