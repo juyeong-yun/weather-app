@@ -45,3 +45,16 @@ export const getCurrentDateTime = () => {
         };
     }
 };
+
+export const getNearestBaseTime = (base_time) => {
+    // 기상청에서 제공하는 시간 목록 (시간 단위로만 표시)
+    const availableBaseTimes = ['0210', '0510', '0810', '1110', '1410', '1710', '2010', '2310'];
+
+    // 시간만 자르기
+    const currentHour = base_time.slice(0,2);
+
+    const nearestBaseTime = availableBaseTimes.reverse().find(time => time < `${currentHour}10`);
+    
+    // 만약 현재 시간이 가장 큰 시간보다 크면, 가장 작은 시간으로 설정
+    return nearestBaseTime || availableBaseTimes[0]; // 다음 날의 첫 번째 base_time으로 설정
+};
