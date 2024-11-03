@@ -1,16 +1,20 @@
-// src/services/apiService.js
+// ./src/services/apiServiceTest.js
 import { getNearestBaseTime } from '../utils/dateUtil';
 /**
  * geoCoding API
  * @param {*} address 
  * @returns 
  */
-export const fetchGeoData = async (address) => {
+export const fetchTestGeoData = async (address) => {
+    //  GitHub Pages는 이 파일을 직접 사용할 수 없기 때문
     const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
-    
+    /**
+     * encodeURIComponent() : URL 에서 안전하게 사용할 수 있도록 문자열을 인코딩 해준다.
+     * 공백 %20
+     */
     if (address) {
-        const geoUrl = `${baseName}/api/naver?query=${encodeURIComponent(address)}`;
-        // console.log("geo url: ", geoUrl);
+        const geoUrl = `${baseName}/kisangcheong-test/api/naver?query=${encodeURIComponent(address)}`;
+        console.log("geo url: ", geoUrl);
 
         const response = await fetch(geoUrl, {
             method: 'GET',
@@ -23,31 +27,25 @@ export const fetchGeoData = async (address) => {
         if (!response.ok) {
             throw new Error('Failed to fetch geocoding data');
         }
-    
         return response.json();
     }
     
 };
 
-/**
- * 기상청 API
- * @param {*} baseDate 
- * @param {*} baseTime 
- * @param {*} nx 
- * @param {*} ny 
- * @returns 
- */
-export const fetchWeatherData = async (baseDate, baseTime, nx, ny) => {
+
+export const fetchTestWeatherData = async (baseDate, baseTime, nx, ny) => {
     const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
     
     if (baseDate && baseTime && nx && ny){
         const baseTimeFore = getNearestBaseTime(baseTime);
-
-        // 초단기 실황
-        const realTimeUrl = `${baseName}/api/weather/real-time?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
-        // 단기 예보
-        const forecastUrl = `${baseName}/api/weather/forecast?base_date=${baseDate}&base_time=${baseTimeFore}&nx=${nx}&ny=${ny}`;
-        console.log(forecastUrl);
+        
+        // 초단기 실황 API URL
+        const realTimeUrl = `${baseName}/kisangcheong-test/api/weather/real-time?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
+        // console.log("초단기 실황 url : ", realTimeUrl);
+        
+        // 단기 예보 API URL : Main에서만 사용
+        const forecastUrl = `${baseName}/kisangcheong-test/api/weather/forecast?base_date=${baseDate}&base_time=${baseTimeFore}&nx=${nx}&ny=${ny}`;
+        // console.log("단기예보 url : ", forecastUrl);
 
         try {
             // 단기 실황, 단기 예보 호출
@@ -80,3 +78,4 @@ export const fetchWeatherData = async (baseDate, baseTime, nx, ny) => {
         }
     }
 };
+
