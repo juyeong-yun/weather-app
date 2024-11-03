@@ -1,10 +1,10 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import axios from 'axios';
 import { fetchGeoData, fetchWeatherData } from '../services/apiService';
 
 import { convertToGrid } from '../utils/gridConverter';
 import { getCurrentDateTime } from '../utils/dateUtil';
-import { getPrecipitationType } from '../utils/weatherCode';
+import { getPrecipitationType } from '../utils/codeChanging';
+import { getWeatherIcon } from '../utils/getIcons';
 
 import '../css/main.css';
 import '../reset.css';
@@ -14,58 +14,24 @@ import { faMagnifyingGlass, faLocationDot} from '@fortawesome/free-solid-svg-ico
 // import { response } from 'express';
 
 const Main = () => {
-    const [weatherData, setWeatherData] = useState(null);
+    const [realTimeData, setRealTimeData] = useState(null);
+    const [forecastData, setForecastData] = useState(null);
     const [geoData, setGeoData] = useState(null);
-    const [address, setAddress] = useState('');
+    const [address, setAddress] = useState('인천광역시 서구 가정동');
     const [inputValue, setInputValue] = useState('');
     const [baseDate, setBaseDate] = useState("");
     const [baseTime, setBaseTime] = useState("");
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [weatherIcon, setWeatherIcon] = useState('../imges/sunny.png');
+    const [minTemp, setMinTemp] = useState('');
+    const [maxTemp, setMaxTemp] = useState('');
 
-    const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
-
-    useEffect(() => {
-        const fetchData = async() => {
-            setLoading(true);
-            setError(null);
-            
-            // 서버 연결 - GitHub Pages는 이 파일을 직접 사용할 수 없음
-            
-            const baseUrl = process.env.REACT_APP_BASE_URL  || 'http://localhost:4000';
-            try{
-                const [geoResponse, weatherResponse] = await Promise.all([
-                    axios.get(`${baseUrl}${baseName}/api/naver`),
-                    axios.get(`${baseUrl}${baseName}/api/weather`)
-                ]);
-                setGeoData(geoResponse.data);
-                setWeatherData(weatherResponse.data);
-            } catch (error){
-                console.error("데이터 가져오는 중 오류 발생: ", error);
-                setError("데이터 가져오는 중 오류 발생");
-            } finally {
-                setLoading(false);
-            }
-        }
-        
-        fetchData();
-    }, [baseName]);
-    
     const searchLocationWeather = useCallback( async () =>{
         if(!address) return;
-
-        setLoading(true);
         setError(null);
 
         try {
-            /**
-             * 현재 페이지가 /kisangcheong-test 인지 확인
-             * window.location: 현재 페이지의 URL 정보를 담고 있는 객체
-             * .includes : 포함되면 true, 포함되지 않으면 false 반환
-             */
-            const isKisangcheongTest = window.location.pathname.replace(baseName, '').includes('kisangcheong-test');
-
-            const geoData = await fetchGeoData(address, isKisangcheongTest);
+            const geoData = await fetchGeoData(address);
             setGeoData(geoData);
             // console.log(geoData);
 
@@ -75,29 +41,48 @@ const Main = () => {
                 
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
 
-                const weatherData = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
-                // console.log("weather: ", weatherData);
-                setWeatherData(weatherData);
+                const {realTimeData, forecastData} = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
+                // console.log("단기실황",realTimeData);
+                console.log("단기예보",forecastData);
+                
+                setRealTimeData(realTimeData); // 실시간 데이터 설정
+                setForecastData(forecastData); // 예보 데이터 설정
+
             } else {
                 throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
             }
-
         } catch (error) {
             console.error("API 호출 실패", error);
             setError(error.message);
         
-        } finally {
-            setLoading(false);
-        }
+        } 
         
-    } , [address, baseDate, baseTime, baseName]);
+    } , [address, baseDate, baseTime]);
 
     useEffect(() => {
         const {baseDate: date, baseTime : time} = getCurrentDateTime();
-        
+
         setBaseDate(date);
         setBaseTime(time);
-    },[]);
+        
+        // 주소가 비어 있지 않으면 searchLocationWeather 호출
+        if (address) {
+            searchLocationWeather();
+        }
+
+    }, [address, searchLocationWeather]);
+
+    // forecastData가 업데이트될 때마다 날씨 아이콘을 업데이트
+    useEffect(() => {
+        if (forecastData) {
+            const fcstValue = forecastData.response.body.items.item.find(item => item.category === "SKY")?.fcstValue;
+            if (fcstValue) {
+                const icon = getWeatherIcon(fcstValue);
+                setWeatherIcon(icon);
+            }
+        }
+
+    }, [forecastData]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -109,12 +94,6 @@ const Main = () => {
         }
     };
 
-    useEffect(() => {
-        // address가 비어 있지 않을 때만 searchLocationWeather 호출
-        if(address) {
-            searchLocationWeather();
-        }
-    },[address, searchLocationWeather]);
 
     return (
     <div className="container">
@@ -128,42 +107,59 @@ const Main = () => {
             </div>
         </form>
         
+        <div id='error'>
+            {error && <h3>{error}</h3>}
+        </div>
+
         <div className='searchResult'>
             <div className='resultBox'>
-                {/* optional chaining (?.)을 사용하여 중간에 undefined인 경우에도 오류가 발생하지 않도록 처리 */}
-                {weatherData && geoData && weatherData.response?.body?.items?.item && (
-                    <div className='today'>
-                        <div id='loc'>
-                            <span><FontAwesomeIcon icon={faLocationDot} /> {geoData.addresses[0].roadAddress}</span>
+                <div className='today'>
+                    <div id='temp'>
+                        <div className='loc'>
+                            <h3><FontAwesomeIcon icon={faLocationDot} style={{ marginRight: '5px' }}/> 
+                                {geoData ? geoData.addresses[0].roadAddress : address }
+                            </h3>
                         </div>
-                        {weatherData.response.body.items.item.map((item, index) => (
-                            <div key={index}>
-                                {item.category === "T1H" && (
-                                        <div id='temp'>
-                                            <span>현재 온도: {item.obsrValue}°C</span>
-                                        </div>
-                                    )}
-                                    {item.category === "REH" && (
-                                        <div id='reh'>
-                                            <span>습도: {item.obsrValue}%</span>
-                                        </div>
-                                    )}
-                                    {item.category === "PTY" && (
-                                        <div id='pty'>
-                                            <span>강수 형태: {getPrecipitationType(item.obsrValue)}</span>
-                                        </div>
-                                    )}
+                        <div className='t1h'>
+                            <span className='weatherIcon'>
+                                {forecastData && ( <img src= {weatherIcon} alt="" />)}
+                            </span>
+                            <span>
+                            {realTimeData && realTimeData.response && realTimeData.response.body ? 
+                                (realTimeData.response.body.items.item.find(item => item.category === "T1H")?.obsrValue + '°C') : '정보 없음'}
+                            </span>
+                            <div>
+                                <span>최저
+                                {forecastData && forecastData.response && forecastData.response.body ? 
+                                    (forecastData.response.body.items.item.find(item => item.category === "SKY")?.fcstValue + '°C') : '정보 없음'}
+                                </span>
+                                <span>최고
+                                {forecastData && forecastData.response && forecastData.response.body ? 
+                                    (forecastData.response.body.items.item.find(item => item.category === "TMX")?.fcstValue + '°C') : '정보 없음'}
+                                </span>
                             </div>
-                        ))}
-                        <div>
-
+                            
                         </div>
+                        
                     </div>
-                )}
+                    <div id='reh'>
+                        <span>
+                            {realTimeData && realTimeData.response && realTimeData.response.body ? 
+                                (realTimeData.response.body.items.item.find(item => item.category === "REH")?.obsrValue + '%') : '정보 없음'}
+                        </span>
+                    </div>
+                    <div id='pty'>
+                        <span>
+                            {realTimeData && realTimeData.response && realTimeData.response.body? 
+                                (getPrecipitationType(realTimeData.response.body.items.item.find(item => item.category === "PTY")?.obsrValue)) : '정보 없음'}
+                        </span>
+                    </div>
+                </div>
+                
                 </div>
                 <div className='tempByClothes'>
                     <div id='clothes'>
-                        <span>온도에 맞는 옷차림은 아래와 같습니다.</span>
+                        <h3>온도에 맞는 옷차림은 아래와 같습니다.</h3>
                     </div>
                 </div>
         </div>
