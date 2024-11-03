@@ -64,7 +64,7 @@ const ForecastTest = () => {
         if(region) {
             fetchForecastData();
         }
-    }, [region, apiKey]);
+    }, [region, apiKey, fetchForecastData]);
 
     return(
         <div className="container">
