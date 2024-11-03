@@ -22,3 +22,16 @@ export const getPrecipitationType = (obsrValue) => {
     }
 
 };
+
+/**
+ * 하늘 상태 코드변환
+ * @param {} fcstValue 
+ */
+export const getSkyType = (fcstValue) => {
+    switch(fcstValue){
+        case "1" & "2" & "3" & "4" & "5" : return "맑음";
+        case "6" & "7" & "8" : return "구름 많음";
+        case "9" & "10" : return "흐림";
+        default : return "상태변화 없음"
+    }
+};
