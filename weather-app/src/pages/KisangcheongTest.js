@@ -1,51 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { fetchGeoData, fetchWeatherData } from '../services/apiService';
+import { fetchTestGeoData, fetchTestWeatherData } from '../services/apiServiceTest';
 
 import { convertToGrid } from '../utils/gridConverter';
 import { getCurrentDateTime } from '../utils/dateUtil';
-import { getPrecipitationType } from '../utils/weatherCode';
+import { getPrecipitationType } from '../utils/codeChanging';
 
 import '../css/main.css';
 import '../reset.css';
 
 const KisangcheongTest = () => {
+    const [weatherData, setWeatherData] = useState({});
+    const [realTimeData, setRealTimeData] = useState(null);
+    const [forecastData, setForecastData] = useState(null);
+    const [geoData, setGeoData] = useState(null);
     const [address, setAddress] = useState('');
     const [inputValue, setInputValue] = useState('');
-    const [weatherData, setWeatherData] = useState(null);
-    const [geoData, setGeoData] = useState(null);
     const [baseDate, setBaseDate] = useState("");
     const [baseTime, setBaseTime] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
-
-    useEffect(() => {
-        const fetchData = async() => {
-            setLoading(true);
-            setError(null);
-            
-            //  GitHub Pages는 이 파일을 직접 사용할 수 없기 때문
-            const baseUrl = process.env.REACT_APP_BASE_URL  || 'http://localhost:4000';
-            try{
-                const [geoResponse, weatherResponse] = await Promise.all([
-                    axios.get(`${baseUrl}${baseName}/api/naver`),
-                    axios.get(`${baseUrl}${baseName}/api/weather`)
-                ]);
-                
-                setGeoData(geoResponse.data);
-                setWeatherData(weatherResponse.data);
-            } catch (error){
-                console.error("데이터 가져오는 중 오류 발생: ", error);
-                setError("데이터 가져오는 중 오류 발생");
-            } finally {
-                setLoading(false);
-            }
-        }
-        
-        fetchData();
-    }, [baseName]);
 
     const fetchKisangcheongData = useCallback(async() => {
         if (!address) return;
@@ -54,10 +28,7 @@ const KisangcheongTest = () => {
         setError(null);
         
         try{ 
-            const isKisangcheongTest = window.location.pathname.replace(baseName, '').includes('kisangcheong-test');
-            // console.log("기상청 단어 포함 : ", isKisangcheongTest);
-
-            const geoData = await fetchGeoData(address, isKisangcheongTest);
+            const geoData = await fetchTestGeoData(address);
             setGeoData(geoData);
             // console.log("geoData: ", geoData);
 
@@ -69,9 +40,10 @@ const KisangcheongTest = () => {
                 // 변환 함수 사용
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
                 
-                const weatherData = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny, isKisangcheongTest);
-                // console.log("테스트 weather : ", weatherData);
-                setWeatherData(weatherData);
+                const { realTimeData:realTime, forecastData:forecast} = await fetchTestWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
+
+                setRealTimeData(realTime); // 실시간 데이터 설정
+                setForecastData(forecast); // 예보 데이터 설정
 
             } else {
                 throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
@@ -83,7 +55,7 @@ const KisangcheongTest = () => {
         setLoading(false);
     }
 
-    }, [address, baseDate, baseTime, baseName]);
+    }, [address, baseDate, baseTime]);
 
     // 구하는 날짜와 시간 계산 (초단기 실황에 맞춤)
     useEffect(() => {
@@ -91,7 +63,13 @@ const KisangcheongTest = () => {
         
         setBaseDate(date);
         setBaseTime(time);
-    },[]);
+
+        // address가 비어 있지 않을 때만 fetchKisangcheongData 호출
+        if(address) {
+            fetchKisangcheongData();
+        }
+
+    },[address, fetchKisangcheongData]);
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -102,13 +80,6 @@ const KisangcheongTest = () => {
             setInputValue('');
         }
     };
-
-    useEffect(() => {
-        // address가 비어 있지 않을 때만 fetchKisangcheongData 호출
-        if(address) {
-            fetchKisangcheongData();
-        }
-    },[address, fetchKisangcheongData]);
 
     return (
         <div className="container">
@@ -127,33 +98,29 @@ const KisangcheongTest = () => {
             </form>
             {loading && <p>로딩 중...</p>}
             {error && <p>오류발생 : {error}</p>}
-            {weatherData && geoData && weatherData.response?.body?.items?.item && (
-
-                <div className='result'>
-                    <h3>지역 : {geoData.addresses[0].roadAddress}</h3>
-                    <h3>{weatherData.response.body.items.item[0].baseDate} {weatherData.response.body.items.item[0].baseTime}</h3>
-                        {weatherData.response.body.items.item.map((item, index) => (
-                            // key : 배열의 각 요소를 고유하게 식별하는 데 사용
-                            <div key={index}>
-                                {item.category === "T1H" && (
-                                        <div id='temp'>
-                                            <span>현재 온도: {item.obsrValue}°C</span>
-                                        </div>
-                                    )}
-                                    {item.category === "REH" && (
-                                        <div id='reh'>
-                                            <span>습도: {item.obsrValue}%</span>
-                                        </div>
-                                    )}
-                                    {item.category === "PTY" && (
-                                        <div id='pty'>
-                                            <span>강수 형태: {getPrecipitationType(item.obsrValue)}</span>
-                                        </div>
-                                    )}
-                            </div>
-                        ))}
+            <div className='result'>
+                <h3>지역 : {geoData ? geoData.addresses[0].roadAddress : address}</h3>
+                <div className='realTime'>
+                    <div><span>단기 실황 기온 :</span>
+                    {realTimeData && realTimeData.response && realTimeData.response.body ? 
+                        (realTimeData.response.body.items.item.find(item => item.category === "T1H")?.obsrValue + '°C') : '정보 없음'}
                     </div>
-                )}
+                    <div><span>단기 실황 습도 :</span>
+                        {realTimeData && realTimeData.response && realTimeData.response.body ? 
+                            (realTimeData.response.body.items.item.find(item => item.category === "REH")?.obsrValue + '%') : '정보 없음'}
+                    </div>
+                    <div><span>단기 실황 강수 :</span> 
+                        {realTimeData && realTimeData.response && realTimeData.response.body? 
+                            (getPrecipitationType(realTimeData.response.body.items.item.find(item => item.category === "PTY")?.obsrValue)) : '정보 없음'}
+                    </div>
+                </div>
+                <div className='forecast'>
+                    <div><span>단기 예보 기온 :</span>
+                        {forecastData && forecastData.response && forecastData.response.body ? 
+                            (forecastData.response.body.items.item.find(item => item.category === "TMN")?.obsrValue + '°C') : '정보 없음'}
+                    </div>
+                </div>
+            </div>
         </div>
     )
 };
