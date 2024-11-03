@@ -50,10 +50,18 @@ const Note = () => {
                                 <li>URL에서 안전하게 사용할 수 있도록 문자열을 인코딩</li>
                             </ol>
                         </li>
+                        <li>window.location.pathname.replace(baseName, '').includes('kisangcheong-test');
+                            <ol>
+                                <li>이전에 사용, 두개의 호출 페이지를 바꾸면서 삭제</li>
+                                <li>현재 페이지가 /kisangcheong-test 인지 확인</li>
+                                <li>window.location: 현재 페이지의 URL 정보를 담고 있는 객체</li>
+                                <li>.includes : 포함되면 true, 포함되지 않으면 false 반환</li>
+                            </ol>
+                        </li>
                     </ul>
                 </div>
                 <div className='forServer'>
-                    <h3>서버 명령어</h3>
+                    <h3>서버</h3>
                     <ul>
                         <li>서버 폴더에도 .gitignore 필수</li>
                         <li> 깃허브 페이지 이용시 주의 사항
