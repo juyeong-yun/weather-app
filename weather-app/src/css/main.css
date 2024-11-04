@@ -1,20 +1,45 @@
 .title h3 {margin-bottom: 20px; font-size: 17px;}
 
+#error {padding: 7px; margin-bottom: 10px; color: rgb(179, 59, 59); font-weight: 500;}
+
 .searchRegion span { margin: 10px 0;}
 .searchRegion .search { margin: 3% 0;}
 .searchRegion .search input {width: 90%; padding: 4px; border:none; border-bottom: 1px solid;}
 .searchRegion .search button {margin-left: 5px; background-color: white; border: none;}
 
-.searchResult {width: 96%; display: flex; align-items: center; justify-content: center;}
-.resultBox {float: left; width: 48%; border: 1px solid; margin: 5px; }
-.resultBox #loc, .resultBox #temp, .resultBox #reh, .resultBox #pty { border: 1px solid;}
+.searchResult {width: 96%; display: flex;}
+.resultBox {float: left; width: 48%; margin: 5px; }
 
-.tempByClothes {float: right; width: 48%; border: 1px solid; margin: 5px;}
+.resultBox #temp, .resultBox #etc, .resultBox #pty, .tempByClothes {border-radius: 7px;}
 
+.resultBox #temp, .resultBox #etc, .resultBox #pty { border: 1px solid; text-align: center; padding: 7px;  height: 100px;}
+.resultBox #temp, .resultBox #pty { margin-bottom: 15px;}
+
+.resultBox .t1h {margin: 10px 0; display: flex; align-items: center; justify-content: center;}
+.resultBox .t1h div {display: block;}
+
+.resultBox #pty span {display: block;}
+.resultBox #pty .pop, .resultBox #pty .pty,  #reh h3, #wsd h3 {padding: 7px;}
+
+.loc h3 {margin-top: 15px;}
+.t1h .weatherIcon img{min-height: 35px; padding: 5px;}
+.t1h span{font-size: 20px;}
+
+.pty {display: inline-flex; }
+.pty h3,.pop h3 {margin-right: 7px;}
+.pop span, #reh span, #wsd span {font-size: 18px;}
+
+#etc {display: flex;}
+#reh, #wsd {width: 50%;}
+#reh span, #wsd span {position: relative; top: 20px;}
+
+.tempByClothes {float: right; width: 48%; border: 1px solid; margin: 5px; padding: 7px;}
+.tempByClothes h3 {text-align: center;}
 
 /*+++++++++++++++++++ 
 Test Page 
 *+++++++++++++++++++*/
 .result { margin-top: 10px;}
-.result h4, .result p {padding: 10px 0;}
+.result h3, .result div {padding: 10px;}
+.result span {margin-right: 5px;}
 

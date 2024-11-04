@@ -5,12 +5,15 @@ import { convertToGrid } from '../utils/gridConverter';
 import { getCurrentDateTime } from '../utils/dateUtil';
 import { getPrecipitationType } from '../utils/codeChanging';
 import { getWeatherIcon } from '../utils/getIcons';
+import RainProbabilityChart from './RainProbabilityChart'; // 경로에 맞게 수정
 
 import '../css/main.css';
 import '../reset.css';
+import sunny from '../images/sunny.png';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faLocationDot} from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faLocationDot, faUmbrella, faDroplet, faWind} from '@fortawesome/free-solid-svg-icons';
+
 // import { response } from 'express';
 
 const Main = () => {
@@ -22,9 +25,8 @@ const Main = () => {
     const [baseDate, setBaseDate] = useState("");
     const [baseTime, setBaseTime] = useState("");
     const [error, setError] = useState(null);
-    const [weatherIcon, setWeatherIcon] = useState('../imges/sunny.png');
-    const [minTemp, setMinTemp] = useState('');
-    const [maxTemp, setMaxTemp] = useState('');
+    const [weatherIcon, setWeatherIcon] = useState(sunny);
+    const [iconAlt, setIconAlt] = useState("맑은 날씨");
 
     const searchLocationWeather = useCallback( async () =>{
         if(!address) return;
@@ -43,7 +45,7 @@ const Main = () => {
 
                 const {realTimeData, forecastData} = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
                 // console.log("단기실황",realTimeData);
-                console.log("단기예보",forecastData);
+                // console.log("단기예보",forecastData);
                 
                 setRealTimeData(realTimeData); // 실시간 데이터 설정
                 setForecastData(forecastData); // 예보 데이터 설정
@@ -74,14 +76,21 @@ const Main = () => {
 
     // forecastData가 업데이트될 때마다 날씨 아이콘을 업데이트
     useEffect(() => {
-        if (forecastData) {
-            const fcstValue = forecastData.response.body.items.item.find(item => item.category === "SKY")?.fcstValue;
-            if (fcstValue) {
-                const icon = getWeatherIcon(fcstValue);
-                setWeatherIcon(icon);
+        const fetchWeatherIcon = () => {
+            if (forecastData) {
+                const fcstValue = forecastData.response.body.items.item.find(item => item.category === "SKY")?.fcstValue;
+                
+                if (fcstValue) {
+                    const {icon, alt} = getWeatherIcon(fcstValue);
+                    // console.log(icon);
+                    setWeatherIcon(icon);
+                    setIconAlt(alt);
+                        
+                }
             }
-        }
-
+        };
+        fetchWeatherIcon(); // 비동기 함수 호출
+        
     }, [forecastData]);
 
     const handleSubmit = (e) => {
@@ -93,7 +102,6 @@ const Main = () => {
             setInputValue('');
         }
     };
-
 
     return (
     <div className="container">
@@ -122,38 +130,47 @@ const Main = () => {
                         </div>
                         <div className='t1h'>
                             <span className='weatherIcon'>
-                                {forecastData && ( <img src= {weatherIcon} alt="" />)}
+                                {forecastData && ( <img src={weatherIcon} alt={iconAlt} />)}
                             </span>
                             <span>
                             {realTimeData && realTimeData.response && realTimeData.response.body ? 
                                 (realTimeData.response.body.items.item.find(item => item.category === "T1H")?.obsrValue + '°C') : '정보 없음'}
                             </span>
-                            <div>
-                                <span>최저
-                                {forecastData && forecastData.response && forecastData.response.body ? 
-                                    (forecastData.response.body.items.item.find(item => item.category === "SKY")?.fcstValue + '°C') : '정보 없음'}
-                                </span>
-                                <span>최고
-                                {forecastData && forecastData.response && forecastData.response.body ? 
-                                    (forecastData.response.body.items.item.find(item => item.category === "TMX")?.fcstValue + '°C') : '정보 없음'}
-                                </span>
-                            </div>
-                            
                         </div>
-                        
-                    </div>
-                    <div id='reh'>
-                        <span>
-                            {realTimeData && realTimeData.response && realTimeData.response.body ? 
-                                (realTimeData.response.body.items.item.find(item => item.category === "REH")?.obsrValue + '%') : '정보 없음'}
-                        </span>
                     </div>
                     <div id='pty'>
-                        <span>
-                            {realTimeData && realTimeData.response && realTimeData.response.body? 
-                                (getPrecipitationType(realTimeData.response.body.items.item.find(item => item.category === "PTY")?.obsrValue)) : '정보 없음'}
-                        </span>
+                        <div className='pty'>
+                            <h3><FontAwesomeIcon icon={faUmbrella} style={{ marginRight: '5px' }} />강수 형태:</h3>
+                            <span>
+                                {realTimeData && realTimeData.response && realTimeData.response.body? 
+                                    (getPrecipitationType(realTimeData.response.body.items.item.find(item => item.category === "PTY")?.obsrValue)) : '정보 없음'}
+                            </span>
+                        </div>
+                        <div className='pop'>
+                            {forecastData && <RainProbabilityChart forecastData={forecastData} /> }
+                            <span>
+                                    {forecastData && forecastData.response && forecastData.response.body ? 
+                                        (forecastData.response.body.items.item.find(item => item.category === "POP")?.fcstValue + '%') : '정보 없음'}
+                            </span>
+                        </div>
                     </div>
+                    <div id='etc'>
+                        <div id='reh'>
+                            <h3><FontAwesomeIcon icon={faDroplet} style={{ marginRight: '5px' }} />습도</h3>
+                            <span className='reh'>
+                                {realTimeData && realTimeData.response && realTimeData.response.body ? 
+                                    (realTimeData.response.body.items.item.find(item => item.category === "REH")?.obsrValue + '%') : '정보 없음'}
+                            </span>
+                        </div>
+                        <div id='wsd'>
+                            <h3><FontAwesomeIcon icon={faWind} style={{ marginRight: '5px' }} />풍속</h3>
+                            <span className='wsd'>
+                                {realTimeData && realTimeData.response && realTimeData.response.body ? 
+                                    (realTimeData.response.body.items.item.find(item => item.category === "WSD")?.obsrValue + 'm/s') : '정보 없음'}
+                            </span>
+                        </div>
+                    </div>
+                    
                 </div>
                 
                 </div>
