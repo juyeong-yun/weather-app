@@ -14,11 +14,11 @@ export const getPrecipitationType = (obsrValue) => {
         case "5":
             return "빗방울";
         case "6":
-            return "빗방울눈날림";
+            return "빗방울/눈 날림";
         case "7":
             return "눈날림";
         default:
-            return "알 수 없음"; // 정의되지 않은 경우
+            return "없음"; // 정의되지 않은 경우
     }
 
 };
@@ -29,9 +29,9 @@ export const getPrecipitationType = (obsrValue) => {
  */
 export const getSkyType = (fcstValue) => {
     switch(fcstValue){
-        case "1" & "2" & "3" & "4" & "5" : return "맑음";
-        case "6" & "7" & "8" : return "구름 많음";
-        case "9" & "10" : return "흐림";
+        case "1": return "맑음";
+        case "3" : return "구름 많음";
+        case "4" : return "흐림";
         default : return "상태변화 없음"
     }
 };
