@@ -4,7 +4,7 @@
 export const getPrecipitationType = (obsrValue) => {
     switch (obsrValue) {
         case "0":
-            return "없음";
+            return "해당 없음";
         case "1":
             return "비";
         case "2":
