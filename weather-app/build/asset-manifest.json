@@ -1,15 +1,20 @@
 {
   "files": {
-    "main.css": "/weather-app/static/css/main.2a33eacf.css",
-    "main.js": "/weather-app/static/js/main.941e2639.js",
-    "static/js/453.0ccb7fb4.chunk.js": "/weather-app/static/js/453.0ccb7fb4.chunk.js",
+    "main.css": "/weather-app/static/css/main.b77f0399.css",
+    "main.js": "/weather-app/static/js/main.bf046c02.js",
+    "static/js/453.f9de0c33.chunk.js": "/weather-app/static/js/453.f9de0c33.chunk.js",
+    "static/media/fog.png": "/weather-app/static/media/fog.6b685d2896ff803a51e6.png",
+    "static/media/freezing.png": "/weather-app/static/media/freezing.daa9683bf1fac73c950f.png",
+    "static/media/hot.png": "/weather-app/static/media/hot.a4ee9503ba6e46de0ed5.png",
+    "static/media/snowing.png": "/weather-app/static/media/snowing.65fc7ef249cad0416d99.png",
+    "static/media/fierceness.png": "/weather-app/static/media/fierceness.553b9c8eca62027a7f34.png",
     "index.html": "/weather-app/index.html",
-    "main.2a33eacf.css.map": "/weather-app/static/css/main.2a33eacf.css.map",
-    "main.941e2639.js.map": "/weather-app/static/js/main.941e2639.js.map",
-    "453.0ccb7fb4.chunk.js.map": "/weather-app/static/js/453.0ccb7fb4.chunk.js.map"
+    "main.b77f0399.css.map": "/weather-app/static/css/main.b77f0399.css.map",
+    "main.bf046c02.js.map": "/weather-app/static/js/main.bf046c02.js.map",
+    "453.f9de0c33.chunk.js.map": "/weather-app/static/js/453.f9de0c33.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2a33eacf.css",
-    "static/js/main.941e2639.js"
+    "static/css/main.b77f0399.css",
+    "static/js/main.bf046c02.js"
   ]
 }
