@@ -10,7 +10,6 @@ import '../css/main.css';
 import '../reset.css';
 
 const KisangcheongTest = () => {
-    const [weatherData, setWeatherData] = useState({});
     const [realTimeData, setRealTimeData] = useState(null);
     const [forecastData, setForecastData] = useState(null);
     const [geoData, setGeoData] = useState(null);
@@ -39,22 +38,20 @@ const KisangcheongTest = () => {
                 
                 // 변환 함수 사용
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
+
+                const {realTimeData, forecastData} = await fetchTestWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
+                setRealTimeData(realTimeData); // 실시간 데이터 설정
+                setForecastData(forecastData); // 예보 데이터 설정
                 
-                const { realTimeData:realTime, forecastData:forecast} = await fetchTestWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
-
-                setRealTimeData(realTime); // 실시간 데이터 설정
-                setForecastData(forecast); // 예보 데이터 설정
-
             } else {
                 throw new Error('주소를 찾을 수 없습니다. 다른 주소를 입력해 주세요.');
             }
-    }catch(error) {
-        console.error("API 호출 실패", error);
-        setError(error.message);
-    }finally{
-        setLoading(false);
-    }
-
+        }catch(error) {
+            console.error("API 호출 실패", error);
+            setError(error.message);
+        }finally{
+            setLoading(false);
+        }
     }, [address, baseDate, baseTime]);
 
     // 구하는 날짜와 시간 계산 (초단기 실황에 맞춤)
@@ -96,8 +93,10 @@ const KisangcheongTest = () => {
                     </div>
                 </div>
             </form>
-            {loading && <p>로딩 중...</p>}
-            {error && <p>오류발생 : {error}</p>}
+            <div id='error'>
+                {loading && <h3>로딩 중...</h3>}
+                {error && <h3>{error}</h3>}
+            </div>
             <div className='result'>
                 <h3>지역 : {geoData ? geoData.addresses[0].roadAddress : address}</h3>
                 <div className='realTime'>
@@ -117,7 +116,15 @@ const KisangcheongTest = () => {
                 <div className='forecast'>
                     <div><span>단기 예보 기온 :</span>
                         {forecastData && forecastData.response && forecastData.response.body ? 
-                            (forecastData.response.body.items.item.find(item => item.category === "TMN")?.obsrValue + '°C') : '정보 없음'}
+                            (forecastData.response.body.items.item.find(item => item.category === "TMP")?.fcstValue + '°C') : '정보 없음'}
+                    </div>
+                    <div><span>단기 예보 최고 기온 :</span>
+                        {forecastData && forecastData.response && forecastData.response.body ? 
+                            (forecastData.response.body.items.item.find(item => item.category === "TMX")?.fcstValue + '°C') : '정보 없음'}
+                    </div>
+                    <div><span>단기 예보 최저 기온 :</span>
+                        {forecastData && forecastData.response && forecastData.response.body ? 
+                            (forecastData.response.body.items.item.find(item => item.category === "TMN")?.fcstValue + '°C') : '정보 없음'}
                     </div>
                 </div>
             </div>
