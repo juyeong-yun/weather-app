@@ -35,9 +35,9 @@ reactJS 기반 토이프로젝트
 ## 서버 
 - NodeJS(express) 연동
 
-## 배포
+<!-- ## 배포
 - 깃허브 페이지 배포 : 기상청 API 연결은 해당 사이트로 확인 어려움
-    - https://juyeong-yun.github.io/weather-app/  
+    - https://juyeong-yun.github.io/weather-app/   -->
 
   
 ---
