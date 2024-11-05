@@ -44,7 +44,7 @@ const Main = () => {
                 // console.log(`nx: ${x} ny : ${y}`);
                 
                 const gridCoord = convertToGrid(parseFloat(y), parseFloat(x));
-
+                
                 const {realTimeData, forecastData} = await fetchWeatherData(baseDate, baseTime, gridCoord.nx, gridCoord.ny);
                 // console.log("단기실황",realTimeData);
                 // console.log("단기예보",forecastData);
