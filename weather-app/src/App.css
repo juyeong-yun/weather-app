@@ -8,6 +8,8 @@ body { padding: 10px; font-family: "Lato", sans-serif;}
   }
 }
 
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -34,6 +36,10 @@ body { padding: 10px; font-family: "Lato", sans-serif;}
 
 /* 메뉴바 */
 .menuBar nav {display: flex; margin-bottom: 10px; text-align: center;
-  align-items: center; justify-content: center;}
+  align-items: center; justify-content: space-between;}
 .menuBar nav a {padding: 0 17px; color: #282c34; text-decoration: none; font-size: 15px; }
 .menuBar nav a:hover {color: lightblue; }
+
+@media (max-width: 767px){
+	.menuBar nav a { padding: 0px 9px;}
+}

@@ -1,14 +1,14 @@
 .title h3 {margin-bottom: 20px; font-size: 17px;}
 
-#error {padding: 7px; margin-bottom: 10px; color: rgb(179, 59, 59); font-weight: 500;}
+#error {padding: 7px; margin-bottom: 10px; color: rgba(179, 59, 59,0.7); font-weight: 500;}
 
 .searchRegion span { margin: 10px 0;}
 .searchRegion .search { margin: 3% 0;}
-.searchRegion .search input {width: 90%; padding: 4px; border:none; border-bottom: 1px solid;}
+.searchRegion .search input {width: 96%; padding: 4px; border:none; border-bottom: 1px solid;}
 .searchRegion .search button {margin-left: 5px; background-color: white; border: none;}
 
-.searchResult {width: 96%; display: flex;}
 .resultBox {float: left; width: 48%; margin: 5px; }
+.tempByClothes {float: right; width: 48%; border: 1px solid; margin: 5px; padding: 7px;}
 
 .resultBox #temp, .resultBox #etc, .resultBox #pty, .tempByClothes {border-radius: 7px;}
 
@@ -20,9 +20,24 @@
 
 .resultBox #pty span {display: block;}
 .resultBox #pty .pop, .resultBox #pty .pty,  #reh h3, #wsd h3 {padding: 7px;}
+.searchResult {width: 96%; display: flex;}
+
+@media (max-width: 480px){
+    .resultBox #temp, .resultBox #etc, .resultBox #pty {height: 110px;}
+}
+
+@media (max-width: 767px){
+    .searchRegion .search input {width: 88%;}
+    
+    .searchResult { display: block;}
+    
+    .resultBox {width: 100%; margin: 7px 0px;}
+
+    .tempByClothes {width: 96%; margin: 12px 0px;}
+}
 
 .loc h3 {margin-top: 15px;}
-.t1h .weatherIcon img{min-height: 35px; padding: 5px;}
+.t1h .weatherIcon img{min-width: 35px; padding: 5px;}
 .t1h span{font-size: 20px;}
 
 .pty {display: inline-flex; }
@@ -33,9 +48,33 @@
 #reh, #wsd {width: 50%;}
 #reh span, #wsd span {position: relative; top: 20px;}
 
-.tempByClothes {float: right; width: 48%; border: 1px solid; margin: 5px; padding: 7px;}
-.tempByClothes h3 {text-align: center;}
+@media (max-width: 480px){
+    .t1h .weatherIcon img {min-width: 43px;}
+    .t1h span {font-size: 23px;}
 
+    .loc h3, .pty h3, .pty span, #reh h3, #wsd h3 {font-size: 18px;}
+    .pop span, #reh span, #wsd span {font-size: 22px;}
+    #reh h3, #wsd h3{margin-top: 15px;}
+}
+
+@media (max-width: 767px){
+    #reh h3, #wsd h3{margin-top: 13px;}
+}    
+
+.tempByClothes h3 {font-size: 18px; margin-bottom: 15px; padding: 7px 0;}
+
+.recommonImg {display: flex; justify-content: center;}
+.recommonImg img {width: 27%; margin: 10px 0;}
+.recommonText {margin: 15px 0;}
+
+@media (max-width: 480px){
+    .tempByClothes h3 {font-size: 22px;}
+    .recommonText span {font-size: 18px;}
+}
+
+@media (max-width: 767px){
+    .recommonText {margin: 10px;}
+}
 /*+++++++++++++++++++ 
 Test Page 
 *+++++++++++++++++++*/
