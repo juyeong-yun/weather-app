@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
-body { padding: 10px; font-family: "Lato", sans-serif;}
+body { padding: 5px 0; margin: 10px 20px; font-family: "Lato", sans-serif;}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -35,7 +35,7 @@ body { padding: 10px; font-family: "Lato", sans-serif;}
 .container { margin: 8px 5px; padding: 8px;}
 
 /* 메뉴바 */
-.menuBar nav {display: flex; margin-bottom: 10px; text-align: center;
+.menuBar nav {width: 95%; display: flex; margin-bottom: 10px; text-align: center;
   align-items: center; justify-content: space-between;}
 .menuBar nav a {padding: 0 17px; color: #282c34; text-decoration: none; font-size: 15px; }
 .menuBar nav a:hover {color: lightblue; }
