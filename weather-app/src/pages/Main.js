@@ -5,14 +5,16 @@ import { convertToGrid } from '../utils/gridConverter';
 import { getCurrentDateTime } from '../utils/dateUtil';
 import { getPrecipitationType } from '../utils/codeChanging';
 import { getWeatherIcon } from '../utils/getIcons';
+
 import RainProbabilityChart from './RainProbabilityChart'; // 경로에 맞게 수정
+import ClothingByTemperature from './ClothingByTemperature';
 
 import '../css/main.css';
 import '../reset.css';
 import sunny from '../images/sunny.png';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faLocationDot, faUmbrella, faDroplet, faWind} from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faLocationDot, faUmbrella, faDroplet, faWind, faVestPatches} from '@fortawesome/free-solid-svg-icons';
 
 // import { response } from 'express';
 
@@ -133,14 +135,14 @@ const Main = () => {
                                 {forecastData && ( <img src={weatherIcon} alt={iconAlt} />)}
                             </span>
                             <span>
-                            {realTimeData && realTimeData.response && realTimeData.response.body ? 
-                                (realTimeData.response.body.items.item.find(item => item.category === "T1H")?.obsrValue + '°C') : '정보 없음'}
+                                {realTimeData && realTimeData.response && realTimeData.response.body ? 
+                                    (realTimeData.response.body.items.item.find(item => item.category === "T1H")?.obsrValue + '°C') : '정보 없음'}
                             </span>
                         </div>
                     </div>
                     <div id='pty'>
                         <div className='pty'>
-                            <h3><FontAwesomeIcon icon={faUmbrella} style={{ marginRight: '5px' }} />강수 형태:</h3>
+                            <h3><FontAwesomeIcon icon={faUmbrella} style={{ marginRight: '5px' }} />강수 :</h3>
                             <span>
                                 {realTimeData && realTimeData.response && realTimeData.response.body? 
                                     (getPrecipitationType(realTimeData.response.body.items.item.find(item => item.category === "PTY")?.obsrValue)) : '정보 없음'}
@@ -149,8 +151,8 @@ const Main = () => {
                         <div className='pop'>
                             {forecastData && <RainProbabilityChart forecastData={forecastData} /> }
                             <span>
-                                    {forecastData && forecastData.response && forecastData.response.body ? 
-                                        (forecastData.response.body.items.item.find(item => item.category === "POP")?.fcstValue + '%') : '정보 없음'}
+                                {forecastData && forecastData.response && forecastData.response.body ? 
+                                    (forecastData.response.body.items.item.find(item => item.category === "POP")?.fcstValue + '%') : '정보 없음'}
                             </span>
                         </div>
                     </div>
@@ -176,7 +178,7 @@ const Main = () => {
                 </div>
                 <div className='tempByClothes'>
                     <div id='clothes'>
-                        <h3>온도에 맞는 옷차림은 아래와 같습니다.</h3>
+                        {realTimeData && <ClothingByTemperature realTimeData={realTimeData} />}
                     </div>
                 </div>
         </div>
