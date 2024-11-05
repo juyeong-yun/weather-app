@@ -1,19 +1,20 @@
 # weather-app
 reactJS 기반 토이프로젝트
     기간: - 11/05      
-    주제: 원하는 지역에 대한 날씨를 검색하여, 온도에 맞는 옷차림을 추천 받는 앱  
+    주제: 원하는 지역에 대한 날씨를 검색하여, 온도에 맞는 옷차림을 추천 받는 웹페이지
       
 ## 기능
 1. 원하는 지역의 날씨를 검색 
-    - 날씨 데이터 : 공공데이터 포털 기상청 API 
-    - 지역 데이터 : 네이버맵 API 사용
-        - 범위 : 시/도/동 까지 활용하기 위해 네이버맵 API 사용
+    - 날씨 데이터 : 공공데이터 날씨 예보 API
+        - 단기 예보와 단기 실황 예보 데이터 추출
+    - 지역 데이터 : 네이버맵 API 사용하여 좌표 추출
+        - 범위 : 네이버맵 API를 사용하여 국내 시/도/동 까지 범위를 확장
         
 2. 기온에 맞는 옷차림 추천
-   - 기상청 API에서 가져온 온도 데이터를 사용하여, 계절에 맞는 옷차림을 추천
+   - 기상청 API를 통해 가져온 온도 데이터를 활용하여, 온도에 맞는 옷차림을 추천
 
 3. 페이지 설명  
-   - Home : 메인화면으로 openWeatherMapAPI(geoAPI 포함), 공공데이터 날씨예보 API 와 naver geocodingAPI 를 사용하여 연결
+   - Home : 메인화면으로 openWeatherMapAPI(geoAPI 포함), 공공데이터 날씨 예보 API 와 Naver geocodingAPI 를 사용하여 연결
        - Weather, Forecast : openWeatherMapAPI 에서 사용할 수 있는 두 가지 옵션 연결 test
        - Kisancheong : Main 페이지 연결 전, API 연결 test
        - Note : API 연결을 통해 공부한 점에 대해 작성
