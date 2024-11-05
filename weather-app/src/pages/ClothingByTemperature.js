@@ -1,6 +1,6 @@
 import React from 'react';
 import hot from'../images/hot.png';
-import fireceness from'../images/fireceness.png';
+import fierceness from'../images/fierceness.png';
 import windy from '../images/windy.png';
 import cold from '../images/cold.png';
 import freezing from'../images/freezing.png';
@@ -29,7 +29,7 @@ const ClothingByTemperature = ({realTimeData}) => {
             };
         } else if (temp >= 23) {
             clothingRecommendation = {
-                img : fireceness,
+                img : fierceness,
                 text:`반팔, 얇은 셔츠, 반바지, 면바지\n
                 비교적 가벼운 옷을 추천해요.\n
                 여름의 따뜻함을 느끼며 자유롭게 활동하세요!`
@@ -78,8 +78,8 @@ const ClothingByTemperature = ({realTimeData}) => {
         }
     }
     
-    console.log(clothingRecommendation.img);
-
+    // console.log(clothingRecommendation.img);
+    
     return (
         <div>
             <div className='recommonImg'>
