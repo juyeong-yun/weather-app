@@ -35,9 +35,9 @@ export const fetchTestGeoData = async (address) => {
 
 export const fetchTestWeatherData = async (baseDate, baseTime, nx, ny) => {
     const baseName = process.env.REACT_APP_BASE_NAME || '/weather-app';
+    const baseTimeFore = getNearestBaseTime(baseTime);
     
     if (baseDate && baseTime && nx && ny){
-        const baseTimeFore = getNearestBaseTime(baseTime);
         
         // 초단기 실황 API URL
         const realTimeUrl = `${baseName}/kisangcheong-test/api/weather/real-time?base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
@@ -59,8 +59,7 @@ export const fetchTestWeatherData = async (baseDate, baseTime, nx, ny) => {
             ]);
             // console.log("real ",realTimeResponse.status);
             // console.log("fore ", forecastResponse.status);
-            // console.log("Fore ", forecastResponse.data);
-
+            
             // 각 응답이 JSON 형식인지 확인하고 실제 JSON 데이터를 가져옴
             if (!realTimeResponse.ok || !forecastResponse.ok) {
                 throw new Error('Network response was not ok');
